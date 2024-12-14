@@ -1,8 +1,9 @@
 # C# identifier naming rules and conventions
-Article [Microsoft Learn](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/identifier-names)
-Article [Microsoft Learn](https://github.com/dotnet/runtime/blob/main/docs/coding-guidelines/coding-style.md)
-Article [Microsoft Learn](https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/naming-rules)
-Article [Microsoft Learn](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/names-of-namespaces)
+
+* [Microsoft Learn - C# identifier naming rules and conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/identifier-names)
+* [GitHub - C# Coding Style](https://github.com/dotnet/runtime/blob/main/docs/coding-guidelines/coding-style.md)
+* [Microsoft Learn - Code-style naming rules](https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/naming-rules)
+* [Microsoft Learn - Names of Namespaces](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/names-of-namespaces)
 
 
 ## General syntax
