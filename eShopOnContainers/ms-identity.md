@@ -7,6 +7,58 @@ Hay tantos aspectos sobre la seguridad en microservicios y aplicaciones web que 
 
 Cuando los servicios pueden ser acedidos directamente, se puede usar un microservicio de autenticación dedicado que actúe como un servicio de token de seguridad (STS) para autenticar a los usuarios.
 
+* ASP.NET Core Identity
+  - Para autenticar a los usuarios
+  - No hay que instalar el paquete, ya viene incluido
+  - En un project `classlib` para el Application.Domain, se debera instalar `Microsoft.Extension.Identity.Stores`
+  - Para utilizar con `EntityFrameworkCore` se debe instalar `Microsoft.AspNetCore.Identity.EntityFrameworkCore`
+
+* Servidor OpenID Connect personalizado que utiliza OpenIddict
+  - Para administrar el acceso a los recursos del usuario de las aplicaciones registradas.
+    - `OpenIddict.AspNetCore`
+    - `OpenIddict.EntityFrameworkCore`
+
+## Steps
+1. Domain
+   - Definir la entidad para identificar a los usuarios. Debe extender de `IdentityUser`.
+     
+     ```csharp
+     public class ApplicationUser : IdentityUser { }
+     ```
+     
+2. Infrastructure
+   - Crear el `DbContext`
+     
+     - Instalar el paquete
+       
+       `dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8.0.8`
+       
+     - Extender de `IdentityDbContext` pasandole la entidad `ApplicationUser`
+       
+     ```csharp
+     public class OpenIDContext : IdentityDbContext<ApplicationUser> { }
+     ```
+     
+   - OpenIddict
+     
+     - Instalar el paquete
+       
+       - `dotnet add package OpenIddict.EntityFrameworkCore --version 5.8.0`
+         
+     - Registrar las entidades OpenIddict en el modelo
+       
+     ```csharp
+     protected override void OnModelCreating(DbModelBuilder modelBuilder)
+     {
+         base.OnModelCreating(modelBuilder);
+
+         modelBuilder.UseOpenIddict();
+     }
+     ```
+
+
+
+
 # Autenticación
 La autenticación es el proceso de determinar la identidad de un usuario. El mecanismo principal de ASP.NET Core para identificar a los usuarios de una aplicación es [ASP.NET Core Identity](https://docs.microsoft.com/aspnet/core/security/authentication/identity).
 
@@ -37,7 +89,7 @@ Así es como funciona en el contexto de ASP.NET Core y SSO:
 > Los `Identity Providers (IdPs)`, como `IdentityServer4`, `OpenIddict` o `Azure AD`, implementan los protocolos `OpenID Connect y OAuth 2.0` para gestionar la autenticación y la emisión de tokens.
 
 
-## Roles en OAuth 2.0
+## [Roles en OAuth 2.0](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#roles-in-oauth-20)
 
 En general, hay cuatro partes involucradas en un intercambio de autenticación y autorización de OAuth 2.0 y OpenID Connect. Estos intercambios suelen denominarse *authentication flows* o *auth flows*.
 
