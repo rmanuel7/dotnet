@@ -16,6 +16,9 @@ La autenticación con ASP.NET Core Identity funciona bien para muchos escenarios
 
 OpenID Connect (OIDC) amplía el `protocolo de autorización` OAuth 2.0 para su uso como otro protocolo de autenticación. Puede utilizar OIDC para habilitar el inicio de sesión único (SSO) entre sus aplicaciones habilitadas para OAuth mediante un token de seguridad denominado *ID token*.
 
+> [!NOTE]
+> Tanto el cliente de la aplicación como el usuario de la aplicación se autentican en el flujo confidencial. El cliente de la aplicación utiliza un secreto de cliente o una aserción de cliente para autenticarse.
+
 Mientras que `ASP.NET Core Identity` maneja la administración de usuarios (como registro, inicio de sesión y roles dentro de una sola aplicación), `OAuth 2.0 y OpenID Connect` permiten al cliente autenticarse una vez y usar los tokens para acceder a los recursos, lo que garantiza que el flujo de autenticación y autorización se pueda compartir entre diferentes aplicaciones o servicios en un sistema Single Sign-On (SSO).
 
 Si prefiere emitir tokens de forma local en lugar de usar un proveedor de identidades externo, puede aprovechar algunas bibliotecas de terceros que son buenas. `IdentityServer4` y `OpenIddict` son proveedores de OpenID Connect que se integran fácilmente con `ASP.NET Core Identity` para permitirle emitir tokens de seguridad desde un servicio ASP.NET Core.
@@ -123,6 +126,18 @@ También llamado proveedor de identidad o IdP, maneja de forma segura la informa
           }
       },
       ```
+      > **NOTA**
+      > <br/>[ClientType](https://learn.microsoft.com/en-us/entra/msal/dotnet/getting-started/scenarios)
+      > <br/>Los diferentes tipos de aplicaciones cliente que interactúan con un servidor de autorización se dividen en dos categorías:
+      > * [ClientTypes.Public](https://learn.microsoft.com/en-us/entra/identity-platform/v2-app-types#mobile-and-native-apps) Las aplicaciones de cliente públicas (de escritorio y móviles), son las realizan funciones en nombre de un usuario. Estas aplicaciones pueden agregar inicio de sesión y autorización a los servicios de back-end mediante el [OAuth 2.0 authorization code grant type, o auth code flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow).
+      >   - El authorization code flow comienza cuando el cliente dirige al usuario a el `/authorize` endpoint.
+      >   - Ahora que ha adquirido un código de autorización debe enviar una solicitud POST al `/token` endpoint para obtener el `access_token`.
+      >   - Tiene sentido abilitar los siguentes permisos:
+      >     - Permissions.Endpoints.Authorization,
+      >     - Permissions.Endpoints.Token,
+      >     - Permissions.GrantTypes.AuthorizationCode
+      >     - Permissions.ResponseTypes.Code
+      > * Aplicaciones de cliente confidenciales (aplicaciones web, API web y aplicaciones demonio, de escritorio o web). Este tipo de aplicaciones utilizan ConfidentialClientApplication.
 
 
 
