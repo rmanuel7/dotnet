@@ -126,6 +126,7 @@ También llamado proveedor de identidad o IdP, maneja de forma segura la informa
           }
       },
       ```
+      
       > **NOTA**
       > <br/>[ClientType](https://learn.microsoft.com/en-us/entra/msal/dotnet/getting-started/scenarios)
       > <br/>Los diferentes tipos de aplicaciones cliente que interactúan con un servidor de autorización se dividen en dos categorías:
@@ -142,6 +143,13 @@ También llamado proveedor de identidad o IdP, maneja de forma segura la informa
       >   - Tiene sentido habilitar los siguentes permisos:
       >     - Permissions.Endpoints.Token,
       >     - Permissions.GrantTypes.ClientCredentials
+   
+      
+      > **NOTA**
+      > <br/>[Permissions.GrantTypes.RefreshToken](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#refresh-the-access-token)
+      > <br/>Los `access_token` tienen una vida útil corta. La aplicación puede usar `refresh_token` para adquirir otros access_token después de que caduque el access_token actual. Puede hacerlo enviando otra solicitud POST al `/token` endpoint.
+      > * Solo se proporciona si se habilito los siguentes permisos:
+      >   - Permissions.Prefixes.Scope + Scopes.OfflineAccess
 
 
 
@@ -159,26 +167,14 @@ El servidor de autorización emite los tokens de seguridad que usan sus aplicaci
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Referencias
 1. Endpoints
    * [authorization endpoint and token endpoint](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints)
    * [Request an authorization code](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code)
    * [Request an access token with a client_secret](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-access-token-with-a-client_secret)
+2. Refresh Token
+   * [Refresh the access token](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#refresh-the-access-token)
+   * [Successful response](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#successful-response-2)
 
 
 
