@@ -160,10 +160,11 @@ También llamado proveedor de identidad o IdP, maneja de forma segura la informa
       > * Solo se proporciona si se habilito los siguentes permisos:
       >   - `Permissions.Prefixes.Scope + Scopes.OpenId`  Para emitir el token
       >   - `Permissions.Prefixes.Scope + Scopes.Profile`  Para incluir información del usuario en el token
-      >
+
       > **NOTA**
       > <br/>[RedirectUris](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/blazor-web-app-with-oidc?view=aspnetcore-9.0&pivots=without-bff-pattern#configure-the-app)
-      > <br/>El proveedor OpendID Connect establece estos valores por defecto
+      > <br/>El proveedor OpendID Connect establece estos valores por defecto `/signin-oidc` y `/signout-callback-oidc`.
+      > <br/>Al utilizar el middleware ASP.NET Core OpenID Connect, el `/signin-oidc` endpoint se maneja automáticamente.
 
 
 
