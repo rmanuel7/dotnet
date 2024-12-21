@@ -55,6 +55,27 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
          modelBuilder.UseOpenIddict();
      }
      ```
+     
+   - Definir el provedor de persistencia de datos.
+     
+     - Instalar el paquete
+       
+       - `dotnet add package MySql.EntityFrameworkCore --version 8.0.8`
+
+   - Generar la migraciones (Opcional)
+  
+     - [Design-time services](https://learn.microsoft.com/en-us/ef/core/cli/services)
+    
+     - [Design-time DbContext Creation](https://learn.microsoft.com/en-us/ef/core/cli/dbcontext-creation?tabs=dotnet-core-cli)
+    
+     - Instalar el paquete
+       
+       - `dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0.8`
+         
+     - Ejecutar el commando
+       
+       - `dotnet ef migrations add CreateIdentitySchema`
+
 
 
 
