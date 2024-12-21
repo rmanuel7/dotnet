@@ -129,15 +129,19 @@ También llamado proveedor de identidad o IdP, maneja de forma segura la informa
       > **NOTA**
       > <br/>[ClientType](https://learn.microsoft.com/en-us/entra/msal/dotnet/getting-started/scenarios)
       > <br/>Los diferentes tipos de aplicaciones cliente que interactúan con un servidor de autorización se dividen en dos categorías:
-      > * [ClientTypes.Public](https://learn.microsoft.com/en-us/entra/identity-platform/v2-app-types#mobile-and-native-apps) Las aplicaciones de cliente públicas (de escritorio y móviles), son las realizan funciones en nombre de un usuario. Estas aplicaciones pueden agregar inicio de sesión y autorización a los servicios de back-end mediante el [OAuth 2.0 authorization code grant type, o auth code flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow).
+      > * [ClientTypes.Public](https://learn.microsoft.com/en-us/entra/identity-platform/v2-app-types#mobile-and-native-apps) Las aplicaciones de cliente públicas (de escritorio y móviles), son las que realizan funciones en nombre de un usuario. Estas aplicaciones pueden agregar inicio de sesión y autorización a los servicios de back-end mediante el [OAuth 2.0 authorization code grant type, o auth code flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow).
       >   - El authorization code flow comienza cuando el cliente dirige al usuario a el `/authorize` endpoint.
       >   - Ahora que ha adquirido un código de autorización debe enviar una solicitud POST al `/token` endpoint para obtener el `access_token`.
-      >   - Tiene sentido abilitar los siguentes permisos:
+      >   - Tiene sentido habilitar los siguentes permisos:
       >     - Permissions.Endpoints.Authorization,
       >     - Permissions.Endpoints.Token,
       >     - Permissions.GrantTypes.AuthorizationCode
       >     - Permissions.ResponseTypes.Code
-      > * Aplicaciones de cliente confidenciales (aplicaciones web, API web y aplicaciones demonio, de escritorio o web). Este tipo de aplicaciones utilizan ConfidentialClientApplication.
+      > * [ClientTypes.Confidential](https://learn.microsoft.com/en-us/entra/identity-platform/v2-app-types#server-daemons-and-scripts) Aplicaciones de cliente confidenciales (aplicaciones web, API web y aplicaciones demonio, de escritorio o web). Las aplicaciones que tienen procesos de larga duración o que funcionan sin interacción con un usuario también necesitan una forma de acceder a recursos seguros, como las API web. Estas aplicaciones pueden autenticarse y obtener tokens mediante el uso de un `ClientId`, en lugar de la identidad delegada de un usuario, con el [OAuth 2.0 client credentials flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-client-creds-grant-flow). Puede probar la identidad de la aplicación mediante `ClientSecret` o un certificado.
+      >   - En este flujo, la aplicación interactúa directamente con el `/token` endpoint para obtener acceso.
+      >   - Tiene sentido habilitar los siguentes permisos:
+      >     - Permissions.Endpoints.Token,
+      >     - Permissions.GrantTypes.ClientCredentials
 
 
 
@@ -170,7 +174,11 @@ El servidor de autorización emite los tokens de seguridad que usan sus aplicaci
 
 
 
-
+## Referencias
+1. Endpoints
+   * [authorization endpoint and token endpoint](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints)
+   * [Request an authorization code](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code)
+   * [Request an access token with a client_secret](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-access-token-with-a-client_secret)
 
 
 
