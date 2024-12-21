@@ -134,22 +134,37 @@ También llamado proveedor de identidad o IdP, maneja de forma segura la informa
       >   - El authorization code flow comienza cuando el cliente dirige al usuario a el `/authorize` endpoint.
       >   - Ahora que ha adquirido un código de autorización debe enviar una solicitud POST al `/token` endpoint para obtener el `access_token`.
       >   - Tiene sentido habilitar los siguentes permisos:
-      >     - Permissions.Endpoints.Authorization,
-      >     - Permissions.Endpoints.Token,
-      >     - Permissions.GrantTypes.AuthorizationCode
-      >     - Permissions.ResponseTypes.Code
+      >     - `Permissions.Endpoints.Authorization`
+      >     - `Permissions.Endpoints.Token`
+      >     - `Permissions.GrantTypes.AuthorizationCode`
+      >     - `Permissions.ResponseTypes.Code`
       > * [ClientTypes.Confidential](https://learn.microsoft.com/en-us/entra/identity-platform/v2-app-types#server-daemons-and-scripts) Aplicaciones de cliente confidenciales (aplicaciones web, API web y aplicaciones demonio, de escritorio o web). Las aplicaciones que tienen procesos de larga duración o que funcionan sin interacción con un usuario también necesitan una forma de acceder a recursos seguros, como las API web. Estas aplicaciones pueden autenticarse y obtener tokens mediante el uso de un `ClientId`, en lugar de la identidad delegada de un usuario, con el [OAuth 2.0 client credentials flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-client-creds-grant-flow). Puede probar la identidad de la aplicación mediante `ClientSecret` o un certificado.
       >   - En este flujo, la aplicación interactúa directamente con el `/token` endpoint para obtener acceso.
       >   - Tiene sentido habilitar los siguentes permisos:
-      >     - Permissions.Endpoints.Token,
-      >     - Permissions.GrantTypes.ClientCredentials
+      >     - `Permissions.Endpoints.Token`,
+      >     - `Permissions.GrantTypes.ClientCredentials`
    
       
       > **NOTA**
       > <br/>[Permissions.GrantTypes.RefreshToken](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#refresh-the-access-token)
       > <br/>Los `access_token` tienen una vida útil corta. La aplicación puede usar `refresh_token` para adquirir otros access_token después de que caduque el access_token actual. Puede hacerlo enviando otra solicitud POST al `/token` endpoint.
       > * Solo se proporciona si se habilito los siguentes permisos:
-      >   - Permissions.Prefixes.Scope + Scopes.OfflineAccess
+      >   - `Permissions.Prefixes.Scope + Scopes.OfflineAccess`
+      
+      > **NOTA**
+      > <br/>[ID token](https://learn.microsoft.com/en-us/entra/identity-platform/id-tokens)
+      > <br/>Los ID token son un tipo de token de seguridad que sirve como prueba de autenticación y confirma que un usuario se ha autenticado correctamente.
+      > * Un JSON Web Token.
+      > * La aplicación puede decodificar los segmentos de este token para solicitar información sobre el usuario que inició sesión.
+      > * Este enfoque se denomina *hybrid flow* porque combina OIDC con el OAuth2 authorization code flow.
+      > * Solo se proporciona si se habilito los siguentes permisos:
+      >   - `Permissions.Prefixes.Scope + Scopes.OpenId`  Para emitir el token
+      >   - `Permissions.Prefixes.Scope + Scopes.Profile`  Para incluir información del usuario en el token
+      >
+      > **NOTA**
+      > <br/>[RedirectUris](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/blazor-web-app-with-oidc?view=aspnetcore-9.0&pivots=without-bff-pattern#configure-the-app)
+      > <br/>El proveedor OpendID Connect establece estos valores por defecto
+
 
 
 
@@ -175,6 +190,9 @@ El servidor de autorización emite los tokens de seguridad que usan sus aplicaci
 2. Refresh Token
    * [Refresh the access token](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#refresh-the-access-token)
    * [Successful response](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#successful-response-2)
+3. ID Token
+   * [Successful response](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#successful-response-2)
+   * [Request an ID token as well or hybrid flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-id-token-as-well-or-hybrid-flow)
 
 
 
