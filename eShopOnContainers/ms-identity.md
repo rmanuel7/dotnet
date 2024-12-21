@@ -87,6 +87,10 @@ También llamado proveedor de identidad o IdP, maneja de forma segura la informa
       <br/>Proporciona un marco para registrar y administrar aplicaciones cliente que solicitarán autenticación y autorización para acceder a recursos en nombre de los usuarios.
       
       ```csharp
+      using Microsoft.Extensions.Configuration;
+      using OpenIddict.Abstractions;
+      using static OpenIddict.Abstractions.OpenIddictConstants;
+      
       // Confidential Client
       new OpenIddictApplicationDescriptor
       {
