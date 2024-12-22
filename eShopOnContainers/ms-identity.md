@@ -31,36 +31,35 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
      
      - Instalar el paquete
        
-       `dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8.0.8`
+       ```powershell
+       dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8.0.8
+       dotnet add package OpenIddict.EntityFrameworkCore --version 5.8.0
+       ```
        
      - Extender de `IdentityDbContext` pasandole la entidad `ApplicationUser`
        
-     ```csharp
-     public class OpenIDContext : IdentityDbContext<ApplicationUser> { }
-     ```
-     
-   - OpenIddict
-     
-     - Instalar el paquete
-       
-       - `dotnet add package OpenIddict.EntityFrameworkCore --version 5.8.0`
-         
+       ```csharp
+       public class OpenIDContext : IdentityDbContext<ApplicationUser> { }
+       ```
+      
      - Registrar las entidades OpenIddict en el modelo
        
-     ```csharp
-     protected override void OnModelCreating(DbModelBuilder modelBuilder)
-     {
-         base.OnModelCreating(modelBuilder);
+       ```csharp
+       protected override void OnModelCreating(DbModelBuilder modelBuilder)
+       {
+           base.OnModelCreating(modelBuilder);
 
-         modelBuilder.UseOpenIddict();
-     }
-     ```
+           modelBuilder.UseOpenIddict();
+       }
+       ```
      
    - Definir el provedor de persistencia de datos.
      
      - Instalar el paquete
-       
-       - `dotnet add package MySql.EntityFrameworkCore --version 8.0.8`
+  
+       ```powershell
+       dotnet add package MySql.EntityFrameworkCore --version 8.0.8
+       ```
 
    - Generar la migraciones (Opcional)
   
@@ -70,11 +69,15 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
     
      - Instalar el paquete
        
-       - `dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0.8`
+       ```powershell
+       dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0.8
+       ```
          
      - Ejecutar el commando
        
-       - `dotnet ef migrations add CreateIdentitySchema`
+       ```powershell
+       dotnet ef migrations add CreateIdentitySchema
+       ```
          
    - Establecer un conjunto incial de datos
      
@@ -89,7 +92,9 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
      
      - Instalar el paquete
        
-       - `dotnet add package OpenIddict.AspNetCore --version 5.8.0`
+       ```powershell
+       dotnet add package OpenIddict.AspNetCore --version 5.8.0
+       ```
          
      - Crea el `/authorize` endpoint para obtener el `authorization_code`, cuando la aplicación cliente, previamente registrada, lo solicita durante la autenticación del usuario.
        
