@@ -19,14 +19,14 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
     - `OpenIddict.EntityFrameworkCore`
 
 ## Steps
-1. Domain
+1. **Domain**
    - Definir la entidad para identificar a los usuarios. Debe extender de `IdentityUser`.
      
      ```csharp
      public class ApplicationUser : IdentityUser { }
      ```
      
-2. Infrastructure
+2. **Infrastructure**
    - Crear el `DbContext`
      
      - Instalar el paquete
@@ -83,23 +83,31 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
      - Applicaciones (OpenIddictApplicationDescriptor)
 
 
-2. Application
+2. **Application**
    
    - Crea el controlador de autorización
      
-     - Crea el `/authorize` endpoint para obtener el `authorization_code`.
+     - Crea el `/authorize` endpoint para obtener el `authorization_code`, cuando la aplicación cliente, previamente registrada, lo solicita durante la autenticación del usuario.
+       
+       - También puedes recibir un `id_token` si lo solicitas y tienes `Permissions.GrantTypes.Implicit` habilitada en el registro de tu aplicación.
+       - Este comportamiento a veces se denomina `hybrid flow`.
        
      - Crea el `/token` endpoint para obtener el `access_token`
     
-     - Crea el `/userinfo` endpoint para obtener datos del usuario.
+     - Crea el `/userinfo` endpoint para obtener datos adicionales del usuario.
     
        - No se recomienda. Considere utilizar un `id_token` para obtener la información del usuario.
    
    - Crea el controlador de Authenticacion (AccountController)
-   - -
-   - -
-   - -
-   - -
+     
+     - Crea el `/Login` endpoint para autenticar al usuario.
+       
+       - Cuando una applicación necesita obtener un `ID token` en nombre de un usuario, si el usuario no ha iniciado sesión (no ha autorizado a la aplicación), sera redirigido al `/Login` endpoint para obtener el `authorization_code`.
+       - Cuando un usuario intenta acceder a una página restringida a la que no está autorizado a acceder o cuando no ha sido autenticado por el sistema.
+         
+     - Crea el `/Logout` endpoint para borra las credenciales del usuario almacenadas.
+     
+     - Crea el `/Register` endpoint para los nuevos usuarios.
      
    - Configurar los servicios y el flujo de procesamiento de solicitudes utilizando una clase `Startup`.
    
