@@ -75,6 +75,34 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
      - Ejecutar el commando
        
        - `dotnet ef migrations add CreateIdentitySchema`
+         
+   - Establecer un conjunto incial de datos
+     
+     - Usuarios (IdentityUser)
+       
+     - Applicaciones (OpenIddictApplicationDescriptor)
+
+
+2. Application
+   
+   - Crea el controlador de autorización
+     
+     - Crea el `/authorize` endpoint para obtener el `authorization_code`.
+       
+     - Crea el `/token` endpoint para obtener el `access_token`
+    
+     - Crea el `/userinfo` endpoint para obtener datos del usuario.
+    
+       - No se recomienda. Considere utilizar un `id_token` para obtener la información del usuario.
+   
+   - Crea el controlador de Authenticacion (AccountController)
+   - -
+   - -
+   - -
+   - -
+     
+   - Configurar los servicios y el flujo de procesamiento de solicitudes utilizando una clase `Startup`.
+   
 
 
 
