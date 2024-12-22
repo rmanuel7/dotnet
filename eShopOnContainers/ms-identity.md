@@ -87,6 +87,10 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
    
    - Crea el controlador de autorización
      
+     - Instalar el paquete
+       
+       - `dotnet add package OpenIddict.AspNetCore --version 5.8.0`
+         
      - Crea el `/authorize` endpoint para obtener el `authorization_code`, cuando la aplicación cliente, previamente registrada, lo solicita durante la autenticación del usuario.
        
        - También puedes recibir un `id_token` si lo solicitas y tienes `Permissions.GrantTypes.Implicit` habilitada en el registro de tu aplicación.
