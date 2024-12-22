@@ -126,10 +126,46 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
    - Configurar la UI
      
      - Agregar los archivos staticos
+     - Importar los modelos que se van a tilizar en las vistas
      - Crear las vistas
      - Crear el `_Layout`
        
    - Configurar los servicios y el flujo de procesamiento de solicitudes utilizando una clase `Startup`.
+     
+     - Agrega los servicios
+       
+       - Agregar los controladores
+         
+         ```csharp
+         services.AddMvc(setupAction: options => options.EnableEndpointRouting = false);
+         ```
+         
+       - Agrega el DbContext
+         
+         ```csharp
+         services.AddDbContext<OpenIDContext>(optionsAction: options =>
+         {
+            options.UseMySQL(
+                connectionString: Configuration["ConnectionString"] ??
+                    throw new InvalidOperationException(message: $"Connection string not found."),
+                mySqlOptionsAction: actions =>
+                {
+                    // Configuring Connection Resiliency
+                    actions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                });
+         });
+         ```
+         
+       - Agrega Identity
+         
+         ```csharp
+         services.AddIdentity<ApplicationUser, IdentityRole>()
+             .AddEntityFrameworkStores<OpenIDContext>();
+         ```
+         
+       - Agrega el provedor OpenID Connect
+         - OpenIddict
+       - Agrega el provedor OpenID Connect
    
 
 
