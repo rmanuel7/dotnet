@@ -86,7 +86,7 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
      - Applicaciones (OpenIddictApplicationDescriptor)
 
 
-2. **Application**
+3. **Application**
    
    - Crear los modelos necesarios
      
@@ -166,7 +166,17 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
        - Agrega el provedor OpenID Connect
          - OpenIddict
        - Agrega el provedor OpenID Connect
+
+
+3. **Configure OpenID Connect Web authentication**
    
+   - Instalar el paquete
+     
+     ```powershell
+     dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect --version 8.0.8
+     ```
+     
+   - Configure el OpenID Connect authentication en el cliente
 
 
 
