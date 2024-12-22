@@ -125,7 +125,9 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
      
    - Configurar la UI
      
+     - Agregar los archivos staticos
      - Crear las vistas
+     - Crear el `_Layout`
        
    - Configurar los servicios y el flujo de procesamiento de solicitudes utilizando una clase `Startup`.
    
