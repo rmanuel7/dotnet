@@ -88,6 +88,11 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
 
 2. **Application**
    
+   - Crear los modelos necesarios
+     
+     - AccountLoginViewModel.cs
+     - AccountRegisterViewModel.cs
+       
    - Crea el controlador de autorización
      
      - Instalar el paquete
@@ -118,6 +123,10 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
      
      - Crea el `/Register` endpoint para los nuevos usuarios.
      
+   - Configurar la UI
+     
+     - Crear las vistas
+       
    - Configurar los servicios y el flujo de procesamiento de solicitudes utilizando una clase `Startup`.
    
 
