@@ -199,14 +199,14 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
    - -
      > **NOTA**
      > <br/>Asegúrese de que el middleware de autenticación de ASP.NET Core esté registrado correctamente
-     > ````csharp
-     > /// No web page found for web address: 
+     >```csharp
+     >/// No web page found for web address: 
      >/// * https://localhost:45105/.well-known/openid-configuration
      >/// InvalidOperationException: IDX20803: Unable to obtain configuration from:
      >/// * http://identity:8080/.well-known/openid-configuration.
      >app.UseAuthentication();
      >app.UseAuthorization();
-     > ```
+     >```
      
    - Crea un controlador para administrar la authenticacion (AccountController)
        - Agrega el `[Authorize]` para forzar la autenticación
