@@ -163,9 +163,28 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
              .AddEntityFrameworkStores<OpenIDContext>();
          ```
          
-       - Agrega el provedor OpenID Connect
+       - Agrega el proveedor OpenID Connect
+         
          - OpenIddict
-       - Agrega el provedor OpenID Connect
+           
+       - [Aplicar migraciones en tiempo de ejecución](https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli#apply-migrations-at-runtime)
+
+         Para aplicar migraciones de forma programática, llame a `context.Database.Migrate()`. Por ejemplo, una aplicación ASP.NET típica puede hacer lo siguiente:
+         
+         ```csharp
+         public static void Main(string[] args)
+         {
+             var host = CreateHostBuilder(args).Build();
+
+             using (var scope = host.Services.CreateScope())
+             {
+                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                 db.Database.Migrate();
+             }
+
+             host.Run();
+         }
+         ```
 
 
 3. [**Configure OpenID Connect Web authentication**](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-oidc-web-authentication?view=aspnetcore-9.0#setup-the-openid-connect-client)
