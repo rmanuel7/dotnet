@@ -165,7 +165,18 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
          
        - Agrega el proveedor OpenID Connect
          
-         - OpenIddict
+         - [OpenIddict](https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance)
+           
+           > **NOTA**
+           > <br/>Asegúrese de que el middleware de autenticación de ASP.NET Core esté registrado correctamente
+           >```csharp
+           >/// No web page found for web address: 
+           >/// * https://localhost:45105/.well-known/openid-configuration
+           >/// InvalidOperationException: IDX20803: Unable to obtain configuration from:
+           >/// * http://identity:8080/.well-known/openid-configuration.
+           >app.UseAuthentication();
+           >app.UseAuthorization();
+           >```
            
        - [Aplicar migraciones en tiempo de ejecución](https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli#apply-migrations-at-runtime)
 
@@ -196,7 +207,67 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
      ```
      
    - Configure el OpenID Connect authentication en el cliente
-   - -
+     ```csharp
+        services.AddAuthentication(configureOptions: options =>
+        {
+            options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+        })
+            .AddCookie()
+            .AddOpenIdConnect(configureOptions: options =>
+            {
+                /// Responsible of persisting user's identity after a successful authentication.
+                options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+                /// Setup the OpenID Connect client
+                options.ClientId = "webmvc";
+                options.ClientSecret = "secret";
+
+                /// Both the sign-in and sign-out paths MUST be registered as redirect URIs.
+                /// * The default values are /signin-oidc and /signout-callback-oidc.
+                /// * When using the ASP.NET Core OpenID Connect middleware,
+                /// * the /signin-oidc endpoint is automatically handled for you.
+                /// * You don’t need to write custom logic unless you want to extend or customize the behavior.
+                // options.CallbackPath = "/signin-oidc";
+                // options.SignedOutCallbackPath = "/signout-callback-oidc";
+                // options.RemoteSignOutPath = "/signout-oidc";
+                
+                options.ResponseType = OpenIdConnectResponseType.Code;
+
+                /// Make sure the ASP.NET Core authentication middleware is correctly registered
+                /// * InvalidOperationException: IDX20803: Unable to obtain configuration from: /.well-known/openid-configuration'.
+                options.Authority = Configuration["IdentityUrl"];
+
+                /// This property is set to false to reduce the size of the final authentication cookie
+                options.SaveTokens = true;
+                
+                /// InvalidOperationException: The MetadataAddress or Authority must use HTTPS
+                /// unless disabled for development by setting RequireHttpsMetadata=false.
+                options.RequireHttpsMetadata = false;
+                
+                /// Mapping claims using OpenID Connect authentication
+                /// The profile claims can be returned in the id_token, which is returned after a successful authentication.
+                /// * The ASP.NET Core client app only requires the profile scope.
+                /// * When using the id_token for claims, no extra claims mapping is required.
+                /// * MapInboundClaims MUST be set to false for most OIDC providers, which prevents renaming claims.
+                options.MapInboundClaims = false;
+                options.TokenValidationParameters.NameClaimType = "name";
+                options.TokenValidationParameters.RoleClaimType = "roles";
+                
+                /// Another way to get the user claims is to use the OpenID Connect User Info API. 
+                // options.GetClaimsFromUserInfoEndpoint = true;
+
+                options.Scope.Clear();
+                options.Scope.Add("openid");
+                options.Scope.Add("profile");
+                // options.Scope.Add("orders");
+                // options.Scope.Add("basket");
+                // options.Scope.Add("marketing");
+                // options.Scope.Add("locations");
+                // options.Scope.Add("webshoppingagg");
+                // options.Scope.Add("orders.signalrhub");
+            });
+     ```
      > **NOTA**
      > <br/>Asegúrese de que el middleware de autenticación de ASP.NET Core esté registrado correctamente
      >```csharp
