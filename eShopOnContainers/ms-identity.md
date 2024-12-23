@@ -197,6 +197,17 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
      
    - Configure el OpenID Connect authentication en el cliente
    - -
+     > **NOTA**
+     > <br/>Asegúrese de que el middleware de autenticación de ASP.NET Core esté registrado correctamente
+     > ````csharp
+     > /// No web page found for web address: 
+     >/// * https://localhost:45105/.well-known/openid-configuration
+     >/// InvalidOperationException: IDX20803: Unable to obtain configuration from:
+     >/// * http://identity:8080/.well-known/openid-configuration.
+     >app.UseAuthentication();
+     >app.UseAuthorization();
+     > ```
+     
    - Crea un controlador para administrar la authenticacion (AccountController)
        - Agrega el `[Authorize]` para forzar la autenticación
        - [Implementa una pagina de incio de sesión](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-oidc-web-authentication?view=aspnetcore-9.0#implement-login-page)
