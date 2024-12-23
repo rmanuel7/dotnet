@@ -168,7 +168,7 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
          - [OpenIddict](https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance)
            
            > **NOTA**
-           > <br/>Si está utilizando http, desactive este requisito `DisableTransportSecurityRequirement`.
+           > <br/>De forma predeterminada, el servidor OpenIddict rechaza las solicitudes que no sean HTTPS por razones de seguridad y devolverá una página de error al autor de la llamada.
            > ```csharp
            > // Register the ASP.NET Core host and configure the ASP.NET Core options.
            > options.UseAspNetCore()
