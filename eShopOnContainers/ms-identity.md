@@ -76,7 +76,7 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
      - Ejecutar el commando
        
        ```powershell
-        dotnet ef migrations add InitialCreate --context "OpenIDContext" --starup-project "EShopOnContainers.Identity.csproj" --output-dir "Infrastructure/Migrations"
+        dotnet ef migrations add InitialCreate --context "OpenIDContext" --startup-project "EShopOnContainers.Identity.csproj" --output-dir "Infrastructure/Migrations"
        ```
          
    - Establecer un conjunto incial de datos
