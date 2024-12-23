@@ -168,7 +168,7 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
        - Agrega el provedor OpenID Connect
 
 
-3. **Configure OpenID Connect Web authentication**
+3. [**Configure OpenID Connect Web authentication**](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-oidc-web-authentication?view=aspnetcore-9.0#setup-the-openid-connect-client)
    
    - Instalar el paquete
      
@@ -177,6 +177,11 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
      ```
      
    - Configure el OpenID Connect authentication en el cliente
+   - -
+   - Crea un controlador para administrar la authenticacion (AccountController)
+       - Agrega el `[Authorize]` para forzar la autenticación
+       - [Implementa una pagina de incio de sesión](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-oidc-web-authentication?view=aspnetcore-9.0#implement-login-page)
+       - [Implemente una página de cierre de sesión](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-oidc-web-authentication?view=aspnetcore-9.0#add-a-new-logoutcshtml-and-signedoutcshtml-razor-pages-to-the-project)
 
 
 
