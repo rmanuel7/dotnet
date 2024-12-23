@@ -168,6 +168,7 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
          - [OpenIddict](https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance)
            
            > **NOTA**
+           > <br/>Si está utilizando http, desactive este requisito `DisableTransportSecurityRequirement`.
            > ```csharp
            > // Register the ASP.NET Core host and configure the ASP.NET Core options.
            > options.UseAspNetCore()
@@ -183,7 +184,6 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
            > /// No web page found for web address: 
            > /// * https://localhost:45105/.well-known/openid-configuration
            > app.UseAuthentication();
-           > app.UseAuthorization();
            > ```
            
        - [Aplicar migraciones en tiempo de ejecución](https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli#apply-migrations-at-runtime)
