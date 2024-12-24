@@ -505,7 +505,17 @@ El cliente en un OAuth exchange es la aplicación que solicita acceso a un recur
      
 3. Crea un controlador para administrar la authenticacion (AccountController)
    - Agrega el `[Authorize]` para forzar la autenticación
+
+     ```csharp
+     [Authorize]
+     public class AccountController : Controller
+     {
+         // ....
+     }
+     ```
+     
    - [Implementa una pagina de incio de sesión](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-oidc-web-authentication?view=aspnetcore-9.0#implement-login-page)
+     
      ```csharp
      public async Task<IActionResult> Login(string returnUrl)
      {
@@ -519,7 +529,9 @@ El cliente en un OAuth exchange es la aplicación que solicita acceso a un recur
         return RedirectToAction(actionName: "Index", controllerName: "Catalog");
      }
      ```
+     
    - [Implemente una página de cierre de sesión](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-oidc-web-authentication?view=aspnetcore-9.0#add-a-new-logoutcshtml-and-signedoutcshtml-razor-pages-to-the-project)
+     
      ```csharp
      public IActionResult Logout()
      {
