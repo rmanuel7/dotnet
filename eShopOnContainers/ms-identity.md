@@ -332,52 +332,54 @@ También denominado *identity provider* o *IdP*, gestiona de forma segura la inf
      [OpenIddict](https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance)
          
      ```csharp
-         services.AddOpenIddict()
-         
-            // Register the OpenIddict core components.
-            .AddCore(options =>
+     services.AddOpenIddict()
+    
+        // Register the OpenIddict core components.
+        .AddCore(options =>
+        {
+            // Configure OpenIddict to use the Entity Framework Core stores and models.
+            // Note: call ReplaceDefaultEntities() to replace the default entities.
+            options.UseEntityFrameworkCore()
+                   .UseDbContext<OpenIDContext>();
+        });
+    
+     services.AddOpenIddict()
+    
+        // Register the OpenIddict server components.
+        .AddServer(options =>
+        {
+            // Enable the token endpoint.
+            options.SetAuthorizationEndpointUris(uris: "connect/authorize")
+                .SetTokenEndpointUris(uris: "connect/token");
+    
+            // Enable the client credentials flow.
+            options.AllowClientCredentialsFlow()
+                // ERROR: The specified 'response_type' is not supported.
+                .AllowAuthorizationCodeFlow()
+                .RequireProofKeyForCodeExchange()
+                .AllowRefreshTokenFlow();
+    
+            // Register scopes (permissions)
+            options.RegisterScopes(scopes: new[]
             {
-                // Configure OpenIddict to use the Entity Framework Core stores and models.
-                // Note: call ReplaceDefaultEntities() to replace the default entities.
-                options.UseEntityFrameworkCore()
-                       .UseDbContext<OpenIDContext>();
+                OpenIddictConstants.Scopes.OpenId,
+                OpenIddictConstants.Scopes.Profile,
+                OpenIddictConstants.Scopes.OfflineAccess
             });
-         
-         services.AddOpenIddict()
-         
-            // Register the OpenIddict server components.
-            .AddServer(options =>
-            {
-                // Enable the token endpoint.
-                options.SetAuthorizationEndpointUris(uris: "connect/authorize")
-                    .SetTokenEndpointUris(uris: "connect/token");
-         
-                // Enable the client credentials flow.
-                options.AllowClientCredentialsFlow()
-                    // ERROR: The specified 'response_type' is not supported.
-                    .AllowAuthorizationCodeFlow()
-                    .RequireProofKeyForCodeExchange()
-                    .AllowRefreshTokenFlow();
-
-                // Register scopes (permissions)
-                options.RegisterScopes(scopes: new[]
-                {
-                    OpenIddictConstants.Scopes.OpenId,
-                    OpenIddictConstants.Scopes.Profile,
-                    OpenIddictConstants.Scopes.OfflineAccess
-                });
-         
-                // Register the signing and encryption credentials.
-                options.AddDevelopmentEncryptionCertificate()
-                       .AddDevelopmentSigningCertificate();
-         
-                // Register the ASP.NET Core host and configure the ASP.NET Core options.
-                options.UseAspNetCore()
-                    .EnableTokenEndpointPassthrough()
-                    // ERROR: Openiddict with dotnet core 5 giving the errors as "this server only accepts HTTPS requests."
-                    // InvalidOperationException: IDX20803: Unable to obtain configuration from: /.well-known/openid-configuration.
-                    .DisableTransportSecurityRequirement();
-            });
+    
+            // Register the signing and encryption credentials.
+            options.AddDevelopmentEncryptionCertificate()
+                   .AddDevelopmentSigningCertificate();
+    
+            // Register the ASP.NET Core host and configure the ASP.NET Core options.
+            options.UseAspNetCore()
+                .EnableTokenEndpointPassthrough()
+                // ERROR: The authorization request was not handled
+                .EnableAuthorizationEndpointPassthrough()
+                // ERROR: Openiddict with dotnet core 5 giving the errors as "this server only accepts HTTPS requests."
+                // InvalidOperationException: IDX20803: Unable to obtain configuration from: /.well-known/openid-configuration.
+                .DisableTransportSecurityRequirement();
+        });
      ```
            
      > **NOTA**
@@ -390,7 +392,20 @@ También denominado *identity provider* o *IdP*, gestiona de forma segura la inf
      >     // InvalidOperationException: IDX20803: Unable to obtain configuration from: /.well-known/openid-configuration.
      >     .DisableTransportSecurityRequirement();
      > ```
-           
+     
+     > **NOTA**
+     > <br/>Habilita el modo de transferencia directa para el punto final de autorización de `OpenID Connect`. Cuando se utiliza el modo de transferencia directa, las solicitudes de OpenID Connect son manejadas inicialmente por `OpenIddict`. Una vez validadas, se invoca el resto del proceso de procesamiento de solicitudes, de modo que las solicitudes de OpenID Connect puedan manejarse en una etapa posterior (en un middleware personalizado o en un controlador MVC, por ejemplo).
+     > ```csharp
+     > // Register the ASP.NET Core host and configure the ASP.NET Core options.
+     > options.UseAspNetCore()
+     >     .EnableTokenEndpointPassthrough()
+     >     // ERROR: The authorization request was not handled
+     >     .EnableAuthorizationEndpointPassthrough()
+     >     // ERROR: Openiddict with dotnet core 5 giving the errors as "this server only accepts HTTPS requests."
+     >     // InvalidOperationException: IDX20803: Unable to obtain configuration from: /.well-known/openid-configuration.
+     >     .DisableTransportSecurityRequirement();
+     > ```
+     
      > **NOTA**
      > <br/>Asegúrese de que el middleware de autenticación de ASP.NET Core esté registrado correctamente
      > ```csharp
