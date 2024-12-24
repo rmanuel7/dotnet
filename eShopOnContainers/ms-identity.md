@@ -165,7 +165,56 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
          
        - Agrega el proveedor OpenID Connect
          
-         - [OpenIddict](https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance)
+         [OpenIddict](https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance)
+         
+         ```csharp
+         services.AddOpenIddict()
+         
+            // Register the OpenIddict core components.
+            .AddCore(options =>
+            {
+                // Configure OpenIddict to use the Entity Framework Core stores and models.
+                // Note: call ReplaceDefaultEntities() to replace the default entities.
+                options.UseEntityFrameworkCore()
+                       .UseDbContext<OpenIDContext>();
+            });
+         
+         services.AddOpenIddict()
+         
+            // Register the OpenIddict server components.
+            .AddServer(options =>
+            {
+                // Enable the token endpoint.
+                options.SetAuthorizationEndpointUris(uris: "connect/authorize")
+                    .SetTokenEndpointUris(uris: "connect/token");
+         
+                // Enable the client credentials flow.
+                options.AllowClientCredentialsFlow()
+                    // ERROR: The specified 'response_type' is not supported.
+                    .AllowAuthorizationCodeFlow()
+                    .RequireProofKeyForCodeExchange()
+                    .AllowRefreshTokenFlow();
+
+                // Register scopes (permissions)
+                options.RegisterScopes(scopes: new[]
+                {
+                    OpenIddictConstants.Scopes.OpenId,
+                    OpenIddictConstants.Scopes.Profile,
+                    OpenIddictConstants.Scopes.OfflineAccess
+                });
+         
+                // Register the signing and encryption credentials.
+                options.AddDevelopmentEncryptionCertificate()
+                       .AddDevelopmentSigningCertificate();
+         
+                // Register the ASP.NET Core host and configure the ASP.NET Core options.
+                options.UseAspNetCore()
+                    .EnableTokenEndpointPassthrough()
+                    // ERROR: Openiddict with dotnet core 5 giving the errors as "this server only accepts HTTPS requests."
+                    // InvalidOperationException: IDX20803: Unable to obtain configuration from: /.well-known/openid-configuration.
+                    .DisableTransportSecurityRequirement();
+            });
+         ```
            
            > **NOTA**
            > <br/>De forma predeterminada, el servidor OpenIddict rechaza las solicitudes que no sean HTTPS por razones de seguridad y devolverá una página de error al autor de la llamada.
@@ -186,6 +235,17 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
            > app.UseAuthentication();
            > ```
            
+           > **NOTA**
+           > <br/>El OpenID Connect handler solicita automáticamente los tokens apropiados utilizando el `code` devuelto desde el punto final de autorización. Es decir, OpenID Connect esta utilizando `authorization code flow` con `Proof Key for Code Exchange (PKCE)`. Asegurate que el servidor permita:
+           > ```csharp
+           > // Enable the client credentials flow.
+           > options.AllowClientCredentialsFlow()
+           >     // ERROR: he specified 'response_type' is not supported.
+           >     .AllowAuthorizationCodeFlow()
+           >     .RequireProofKeyForCodeExchange()
+           >     .AllowRefreshTokenFlow();
+           > ```
+    
        - [Aplicar migraciones en tiempo de ejecución](https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli#apply-migrations-at-runtime)
 
          Para aplicar migraciones de forma programática, llame a `context.Database.Migrate()`. Por ejemplo, una aplicación ASP.NET típica puede hacer lo siguiente:
@@ -276,6 +336,9 @@ Cuando los servicios pueden ser acedidos directamente, se puede usar un microser
                 // options.Scope.Add("orders.signalrhub");
             });
      ```
+     > **NOTA**
+     > <br/>El OpenID Connect handler utiliza `authorization code flow` con `Proof Key for Code Exchange (PKCE)`.
+
      
    - Crea un controlador para administrar la authenticacion (AccountController)
        - Agrega el `[Authorize]` para forzar la autenticación
