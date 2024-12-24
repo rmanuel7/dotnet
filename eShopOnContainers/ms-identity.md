@@ -748,5 +748,6 @@ El servidor de autorización emite los tokens de seguridad que usan sus aplicaci
 
 
 
+![image](https://github.com/user-attachments/assets/e7a4fefa-5133-421d-99e5-c24ebb8c6105)
 
 
