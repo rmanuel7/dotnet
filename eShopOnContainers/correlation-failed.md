@@ -1,6 +1,8 @@
 # Correlation failed.
 
 An unhandled exception occurred while processing the request. Exception: Correlation failed.
+> [!NOTE]
+> Correlation failed. when posting back to /signin-oidc
 
 # Cookies de sesión no persistentes:
 
