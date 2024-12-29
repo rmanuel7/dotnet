@@ -160,8 +160,44 @@ El microservicio de carrito de compras (`Basket`) maneja datos que son **transit
         }
     }
    ```
+   
+2. Configurar los servicios y el flujo de procesamiento de solicitudes utilizando una clase `Startup`.
+   
+   - Agregue los servicios
+     
+     - Agregue el controlador
+       
+       ```csharp
+       services.AddMvc(setupAction: o => o.EnableEndpointRouting = false)
+           .AddControllersAsServices();
+       ```
+       
+     - Agregue las opciones para proporcionar [acceso fuertemente tipado](https://learn.microsoft.com/es-es/dotnet/core/extensions/options) a grupos de configuraciones
 
+       ```csharp
+       services.AddOptions();
+       services.Configure<AppSettingsJson>(config: Configuration);
+       ```
 
+     - Configure y Registre Redis
+
+       ```csharp
+         services.AddSingleton<ConnectionMultiplexer>(implementationFactory: serviceProvider =>
+         {
+             var option = serviceProvider.GetRequiredService<IOptions<AppSettingsJson>>();
+             var appSettingsJson = option.Value;
+         
+             var configuration = ConfigurationOptions.Parse(
+                 configuration: appSettingsJson.ConnectionString,
+                 ignoreUnknown: true);
+         
+             configuration.ResolveDns = true;
+         
+             return ConnectionMultiplexer.Connect(configuration: configuration);
+         });
+         
+         services.AddTransient<IBasketRepository, BasketOnRedisRepository>();
+       ```
 
 
 
