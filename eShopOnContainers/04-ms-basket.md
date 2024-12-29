@@ -202,6 +202,44 @@ El microservicio de carrito de compras (`Basket`) maneja datos que son **transit
        > **NOTA**
        > <br/>En Redis, el puerto predeterminado es `6379`, que se utiliza automáticamente si no se especifica explícitamente en la cadena de conexión.
 
+     - Agrega seguridad a la API
+       
+       ```csharp
+         /// ASP.NET Core adds default namespaces to some known claims, which might not be required in the app.
+         /// Optionally, disable these added namespaces and use the exact claims that the OpenID Connect server created.
+         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+         JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+         
+         services
+             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+             .AddJwtBearer(options => {
+                 options.Events = new JwtBearerEvents
+                 {
+                     OnAuthenticationFailed = context =>
+                     {
+                         Console.WriteLine($"Error en la autenticación: {context.Exception.Message}");
+                         return Task.CompletedTask;
+                     }
+                 };
+                 options.Authority = Configuration["IdentityUrl"];
+                 options.Audience = "basket";
+                 options.RequireHttpsMetadata = false;
+                 options.IncludeErrorDetails = true;
+                 options.TokenValidationParameters = new TokenValidationParameters()
+                 {
+                     NameClaimType = "sub",
+                     RoleClaimType = "role"
+                 };
+             });
+       ```
 
-
-
+       > **NOTA**
+       > <br/> [Disabling JWT access token encryption](https://documentation.openiddict.com/configuration/token-formats#disabling-jwt-access-token-encryption)
+       > By default, the OpenIddict server enforces encryption for all the token types it supports.
+       > ```csharp
+       > services.AddOpenIddict()
+       >     .AddServer(options =>
+       >      {
+       >         options.DisableAccessTokenEncryption();
+       >     });
+       > ```
