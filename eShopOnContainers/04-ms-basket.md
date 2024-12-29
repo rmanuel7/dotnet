@@ -198,6 +198,9 @@ El microservicio de carrito de compras (`Basket`) maneja datos que son **transit
          
          services.AddTransient<IBasketRepository, BasketOnRedisRepository>();
        ```
+       
+       > **NOTA**
+       > En Redis, el puerto predeterminado es `6379`, que se utiliza automáticamente si no se especifica explícitamente en la cadena de conexión.
 
 
 
