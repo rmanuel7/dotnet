@@ -207,8 +207,8 @@ El microservicio de carrito de compras (`Basket`) maneja datos que son **transit
        ```csharp
          /// ASP.NET Core adds default namespaces to some known claims, which might not be required in the app.
          /// Optionally, disable these added namespaces and use the exact claims that the OpenID Connect server created.
-         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-         JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+         // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+         // JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
          
          services
              .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
