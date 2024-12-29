@@ -213,6 +213,17 @@ El microservicio de carrito de compras (`Basket`) maneja datos que son **transit
          services
              .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
              .AddJwtBearer(options => {
+         
+                 options.Authority = Configuration["IdentityUrl"];
+         
+                 options.Audience = "basket";
+         
+                 options.RequireHttpsMetadata = false;
+         
+                 options.IncludeErrorDetails = true;
+         
+                 options.MapInboundClaims = false;
+         
                  options.Events = new JwtBearerEvents
                  {
                      OnAuthenticationFailed = context =>
@@ -221,25 +232,25 @@ El microservicio de carrito de compras (`Basket`) maneja datos que son **transit
                          return Task.CompletedTask;
                      }
                  };
-                 options.Authority = Configuration["IdentityUrl"];
-                 options.Audience = "basket";
-                 options.RequireHttpsMetadata = false;
-                 options.IncludeErrorDetails = true;
-                 options.TokenValidationParameters = new TokenValidationParameters()
-                 {
-                     NameClaimType = "sub",
-                     RoleClaimType = "role"
-                 };
              });
        ```
 
        > **NOTA**
-       > <br/> [Disabling JWT access token encryption](https://documentation.openiddict.com/configuration/token-formats#disabling-jwt-access-token-encryption)
-       > By default, the OpenIddict server enforces encryption for all the token types it supports.
+       > <br/>[Disabling JWT access token encryption](https://documentation.openiddict.com/configuration/token-formats#disabling-jwt-access-token-encryption)
+       > <br/>By default, the OpenIddict server enforces encryption for all the token types it supports.
        > ```csharp
        > services.AddOpenIddict()
        >     .AddServer(options =>
        >      {
+       >         // Error en la autenticación: IDX10618:
+       >         //   Key unwrap failed using decryption Keys:
+       >         //     '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.
        >         options.DisableAccessTokenEncryption();
+       >
+       >         options.Configure(options =>
+       >         {
+       >             // Emitir "typ": "JWT" en lugar de "at+jwt" para Access Tokens.
+       >             options.DisableAccessTokenEncryption = true;
+       >         });
        >     });
        > ```
