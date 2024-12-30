@@ -382,7 +382,7 @@ Como se mencionó anteriormente, los datos que posee cada microservicio son priv
       }
      ```
      
-2. Crea la clase de implementación del servicio
+3. Crea la clase de implementación del servicio
    
    ```csharp
       /// <summary>
@@ -563,7 +563,7 @@ Como se mencionó anteriormente, los datos que posee cada microservicio son priv
    >       .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
    > ```
    
-2. Crea un controlador para consumir el servico
+4. Crea un controlador para consumir el servico
    
    ```csharp
       /// <summary>
@@ -655,5 +655,54 @@ Como se mencionó anteriormente, los datos que posee cada microservicio son priv
           }
       }
    ```
+   
+5. Agrega un `ViewComponent` para representar los articulos en `Basket`
 
+   ```csharp
+      /// <summary>
+      /// Componente de vista que muestra el número de artículos en la cesta de compras del usuario.
+      /// </summary>
+      public class BasketCounter : ViewComponent
+      {
+          private readonly IBasketServices _basketServices;
+      
+          /// <summary>
+          /// Inicializa una nueva instancia de la clase <see cref="BasketCounter"/>.
+          /// </summary>
+          /// <param name="basketServices">Servicio que maneja la lógica de la cesta de compras.</param>
+          public BasketCounter(IBasketServices basketServices)
+          {
+              _basketServices = basketServices;
+          }
+      
+          /// <summary>
+          /// Ejecuta la lógica del componente para recuperar la cantidad de artículos en la cesta del usuario.
+          /// </summary>
+          /// <param name="User">Usuario cuya cesta se va acontar</param>
+          /// <returns>Un resultado de vista con el número de artículos en la cesta.</returns>
+          public async Task<IViewComponentResult> InvokeAsync(ApplicationUser User)
+          {
+              var vcm = new BasketCounterViewComponentModel();
+      
+              var basket = await _basketServices.GetBasketAsync(user: User);
+      
+              vcm.ItemsCount = basket.Items.Sum(selector: x => x.Quantity);
+      
+              return View(model: vcm);
+          }
+      }
+   ```
+   
+6. Registrar los servicios en el injector de dependencias
+   
+   ```csharp
+      services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+      
+      services.AddHttpClient<IBasketServices, BasketServices>()
+          .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+      services.AddTransient<IIdentityParser<ApplicationUser>, IdentityParser>();
+   ```
 
+   > **NOTA**
+   > <br/>No olvides agregar el `options.Scope.Add("basket")`
