@@ -344,7 +344,7 @@ Como se mencionó anteriormente, los datos que posee cada microservicio son priv
      - Define un metodo para agregar un `BasketItem` a la `Basket`
      - Define un metodo para actualizar la `Basket`
        
-       ```csharp
+     ```csharp
          /// <summary>
          /// Proporciona una abstracción para gestionar la cesta de compra de un usuario en la tienda.
          /// </summary>
@@ -380,7 +380,7 @@ Como se mencionó anteriormente, los datos que posee cada microservicio son priv
              /// </returns>
              Task<Basket> SetQuantitiesAsync(ApplicationUser user, Dictionary<string, int> quantities);
          }
-       ```
+     ```
 
 
 
