@@ -254,3 +254,89 @@ El microservicio de carrito de compras (`Basket`) maneja datos que son **transit
        >         });
        >     });
        > ```
+
+<br/>
+<br/>
+<br/>
+
+## Web MVC Application: Modificar el cliente
+Como se mencionó anteriormente, los datos que posee cada microservicio son privados para ese microservicio y solo se puede acceder a ellos mediante su **API** de microservicio. Por lo tanto, uno de los desafíos que se presenta es cómo implementar procesos de comunicación de extremo a extremo (`end-to-end business processes`) y, al mismo tiempo, mantener la coherencia en varios microservicios.
+
+1. Modificar el dominio de la aplicación Web Mvc
+   
+   - Agregar el modelo que represente los producto `BasketItem` en la cesta `Basket`
+     
+     ```csharp
+     public class BasketItem
+     {
+          public string Id { get; set; }
+          public string ProductId { get; set; }
+          public string ProductName { get; set; }
+          public decimal UnitPrice { get; set; }
+          public decimal OldUnitPrice { get; set; }
+          public int Quantity { get; set; }
+          public string PictureUrl { get; set; }
+     }
+     ```
+     
+   - Agregar el modelo que represente la cesta `Basket` de productos
+       
+       ```csharp
+         public class Basket
+         {
+             public string BuyerId { get; set; }
+         
+             public List<BasketItem> Items { get; set; }
+         
+             public Basket(string buyerId)
+             {
+                 BuyerId = buyerId;
+                 Items = new List<BasketItem>();
+             }
+         }
+       ```
+     
+     > **NOTA**
+     > <br/>No construyas modelos anemicos, introduce logica dentro de ellos
+     > 1. Agrega un metodo para añadir productos a la cesta
+     >    
+     >    ```csharp
+     >    public void AddBasketItem(CatalogItem item, int productId, int quantity)
+     >    {
+     >        var curItem = Items.Find(match: itm => itm.ProductId.Equals(value: productId.ToString()));
+     >    
+     >        if (curItem == null)
+     >        {
+     >            Items.Add(item: new BasketItem
+     >            {
+     >                Id = Guid.NewGuid().ToString(),
+     >                ProductId = item.Id.ToString(),
+     >                ProductName = item.Name,
+     >                UnitPrice = item.Price,
+     >                Quantity = quantity,
+     >                PictureUrl = item.PictureUri,
+     >            });
+     >        }
+     >        else
+     >        {
+     >            curItem.Quantity = quantity;
+     >        }
+     >    }
+     >    ```
+     >    
+     > 2. Calcula el precio total de la cesta
+     >    
+     >    ```csharp
+     >    public decimal Total()
+     >        {
+     >            return Math.Round(
+     >                d: Items.Sum(
+     >                    selector: s => s.UnitPrice *  s.Quantity), 
+     >                decimals: 2);
+     >        }
+     >    ```
+   - -
+
+
+
+
