@@ -557,6 +557,11 @@ Como se mencionó anteriormente, los datos que posee cada microservicio son priv
    
    > **NOTA**
    > <br/>Esta clase usará `HttpClient` para comunicarse con el microservicio.
+   > <br/>Recuerda pasar el `access_token` en la cabecera de la solicitud, en este caso se utiliza
+   > ```csharp
+   >  services.AddHttpClient<IBasketServices, BasketServices>()
+   >       .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+   > ```
    
 2. Crea un controlador para consumir el servico
    
