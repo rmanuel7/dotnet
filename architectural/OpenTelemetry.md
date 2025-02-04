@@ -1,3 +1,9 @@
+# [What is OpenTelemetry?](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel#what-is-opentelemetry)
+
+OpenTelemetry (OTel) is a cross-platform, open standard for collecting and emitting telemetry data. OpenTelemetry includes:
+
+
+
 # [Instrumentation](https://opentelemetry.io/docs/languages/net/getting-started/#instrumentation)
 
 Next we’ll install the instrumentation [NuGet packages from OpenTelemetry](https://www.nuget.org/profiles/OpenTelemetry) that will generate the telemetry, and set them up.
