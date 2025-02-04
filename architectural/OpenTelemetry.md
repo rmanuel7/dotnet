@@ -1,6 +1,11 @@
 # [What is OpenTelemetry?](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel#what-is-opentelemetry)
 
+
 OpenTelemetry (OTel) is a cross-platform, open standard for collecting and emitting telemetry data. OpenTelemetry includes:
+
+
+> [!NOTE]
+> [Example: Use OpenTelemetry with OTLP and the standalone Aspire Dashboard](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-otlp-example)
 
 
 
