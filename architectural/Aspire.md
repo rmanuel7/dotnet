@@ -28,3 +28,29 @@ info: Aspire.Dashboard.DashboardWebApplication[0]
 info: Aspire.Dashboard.DashboardWebApplication[0]
       OTLP/HTTP listening on: http://[::]:18890
 ```
+
+# [Secure telemetry endpoint](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/dashboard/security-considerations?tabs=bash#secure-telemetry-endpoint)
+
+API key authentication can be enabled on the telemetry endpoint with some additional configuration:
+
+```PowerShell
+docker run --rm -it -d -p 18888:18888 -p 4317:18889 --name aspire-dashboard \
+    -e DASHBOARD__OTLP__AUTHMODE='ApiKey' \
+    -e DASHBOARD__OTLP__PRIMARYAPIKEY='{MY_APIKEY}' \
+    mcr.microsoft.com/dotnet/aspire-dashboard:9.0
+```
+
+The preceding Docker command:
+
+- Starts the .NET Aspire dashboard image and exposes OTLP endpoint as port 4317
+- Configures the OTLP endpoint to use `ApiKey` authentication. This requires that incoming telemetry has a valid `x-otlp-api-key` header value.
+- Configures the expected API key. `{MY_APIKEY}` in the example value should be replaced with a real API key. The API key can be any text, but a value with at least 128 bits of entropy is recommended.
+
+When API key authentication is configured, the dashboard validates incoming telemetry has a required API key. Apps that send the dashboard telemetry must be configured to send the API key. This can be configured in .NET with `OtlpExporterOptions.Headers`:
+
+```csharp
+builder.Services.Configure<OtlpExporterOptions>(
+    o => o.Headers = $"x-otlp-api-key={MY_APIKEY}");
+```
+
+Other languages have different OpenTelmetry APIs. Passing the [OTEL_EXPORTER_OTLP_HEADERS environment variable](https://opentelemetry.io/docs/specs/otel/protocol/exporter/) to apps is a universal way to configure the header.
