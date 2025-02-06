@@ -7,12 +7,29 @@ If the dashboard is used standalone, without the rest of .NET Aspire, the OTLP H
     image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
     container_name: Aspire
     ports:
-      - 18888:18888
-      - 4317:18889
-      - 4318:18890
+      - 18888:18888 # UI del dashboard
+      - 4317:18889 # OTLP using gRPC para recibir datos
+      - 4318:18890 # OTLP using Protobuf over HTTP para recibir datos
+      - 18891:18891 # The dashboard connects to a resource service to load and display resource information. .
     environment:
-      - Dashboard__ResourceServiceClient__Url=http://192.168.1.2:5100
-      - Dashboard__ResourceServiceClient__AuthMode=Unsecured
+      - ASPNETCORE_URLS=http://*:18888
+      - ASPIRE_ALLOW_UNSECURED_TRANSPORT=true
+      - DOTNET_DASHBOARD_OTLP_ENDPOINT_URL=http://*:18889
+      - DOTNET_DASHBOARD_OTLP_HTTP_ENDPOINT_URL=http://*:18890
+      - DASHBOARD__RESOURCE__ENABLED=true
+      - DOTNET_ASPIRE_SHOW_DASHBOARD_RESOURCES=true
+      # - DOTNET_RESOURCE_SERVICE_ENDPOINT_URL=http://localhost:18891
+      # - Dashboard__ResourceServiceClient__Url=http://localhost:18891
+      - Dashboard__ResourceServiceClient__AuthMode=ApiKey
+      - Dashboard__ResourceServiceClient__ApiKey=llr_-GOLspb476TVjQzlrnXNV9ovg9Oyg4sXKCNJA
+      - Dashboard__Otlp__AuthMode=ApiKey
+      - Dashboard__Otlp__PrimaryApiKey=llr_-GOLspb476TVjQzlrnXNV9ovg9Oyg4sXKCNJA
+
+  web.mvc:
+    environment:
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://monitoring.ui:4317
+      - OTEL_EXPORTER_OTLP_HEADERS=x-otlp-api-key=llr_-GOLspb476TVjQzlrnXNV9ovg9Oyg4sXKCNJA
 ```
 
 
