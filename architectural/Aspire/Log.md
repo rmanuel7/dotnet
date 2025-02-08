@@ -1,3 +1,66 @@
+```json
+{
+    "$schema": "https://json.schemastore.org/launchsettings.json",
+    "profiles": {
+        "https": {
+            "commandName": "Project",
+            "dotnetRunMessages": true,
+            "launchBrowser": true,
+            "applicationUrl": "https://localhost:18887;http://localhost:18888",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "DOTNET_ENVIRONMENT": "Development",
+                "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:18889",
+                "DOTNET_DASHBOARD_OTLP_HTTP_ENDPOINT_URL": "https://localhost:18890",
+                "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:18891",
+                "DOTNET_ASPIRE_SHOW_DASHBOARD_RESOURCES": "true"
+                // "DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS": "true"
+            }
+        },
+        "http": {
+            "commandName": "Project",
+            "dotnetRunMessages": true,
+            "launchBrowser": false,
+            "applicationUrl": "http://localhost:18888",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "DOTNET_ENVIRONMENT": "Development",
+                "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:18889",
+                "DOTNET_DASHBOARD_OTLP_HTTP_ENDPOINT_URL": "http://localhost:18890",
+                "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:18891",
+                "DOTNET_ASPIRE_SHOW_DASHBOARD_RESOURCES": "true",
+                "ASPIRE_ALLOW_UNSECURED_TRANSPORT": "true",
+                "AppHost__OtlpApiKey": "llr_-GOLspb476TVjQzlrnXNV9ovg9Oyg4sXKCNJA",
+                "AppHost__ResourceService__AuthMode": "ApiKey",
+                "AppHost__ResourceService__ApiKey": "llr_-GOLspb476TVjQzlrnXNV9ovg9Oyg4sXKCNJA"
+                // "DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS": "true",
+                // "DOTNET_DASHBOARD_RESOURCESERVICE_APIKEY": "llr_-GOLspb476TVjQzlrnXNV9ovg9Oyg4sXKCNJA"
+            }
+        }
+    }
+}
+```
+
+```json
+{
+    "Logging": {
+        "LogLevel": {
+            "Default": "Information",
+            "Microsoft.AspNetCore": "Warning",
+            "Aspire.Hosting.Dcp": "Warning"
+        }
+    },
+    "AppHost": {
+        "OtlpApiKey": "llr_-GOLspb476TVjQzlrnXNV9ovg9Oyg4sXKCNJA",
+        "ResourceService": {
+            "AuthMode": "ApiKey",
+            "ApiKey": "llr_-GOLspb476TVjQzlrnXNV9ovg9Oyg4sXKCNJA"
+        }
+    }
+}
+```
+
+
 ```powershell
 ZES_ENABLE_SYSMAN = 1
 windir = C:\WINDOWS
