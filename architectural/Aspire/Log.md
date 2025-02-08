@@ -3,6 +3,24 @@
 Internal settings are used by the app host and integrations. Internal settings aren't designed to be configured directly.
 
 
+|Name|Value|
+|--|--|
+ASPNETCORE_ENVIRONMENT|Development
+ASPNETCORE_URLS|http://localhost:18888
+DASHBOARD__FRONTEND__AUTHMODE|BrowserToken
+DASHBOARD__FRONTEND__BROWSERTOKEN|f5c26e832a07335b214fd2f18b45ae98
+DASHBOARD__OTLP__AUTHMODE|ApiKey
+DASHBOARD__OTLP__PRIMARYAPIKEY|e35d30b6e0ab8b69dcd5c4eaefc0813e
+DASHBOARD__RESOURCESERVICECLIENT__APIKEY|llr_-GOLspb476TVjQzlrnXNV9ovg9Oyg4sXKCNJA
+DASHBOARD__RESOURCESERVICECLIENT__AUTHMODE|ApiKey
+DOTNET_DASHBOARD_OTLP_ENDPOINT_URL|http://localhost:18889
+DOTNET_DASHBOARD_OTLP_HTTP_ENDPOINT_URL|http://localhost:18890
+DOTNET_RESOURCE_SERVICE_ENDPOINT_URL|http://localhost:18891
+LOGGING__CONSOLE__FORMATTERNAME|json
+
+ 
+
+
 ```json
 {
     "$schema": "https://json.schemastore.org/launchsettings.json",
