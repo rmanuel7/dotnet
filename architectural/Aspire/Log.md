@@ -1,3 +1,8 @@
+# [Internal](https://learn.microsoft.com/en-us/dotnet/aspire/app-host/configuration#internal)
+
+Internal settings are used by the app host and integrations. Internal settings aren't designed to be configured directly.
+
+
 ```json
 {
     "$schema": "https://json.schemastore.org/launchsettings.json",
