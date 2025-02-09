@@ -1,3 +1,8 @@
+# [Integration responsibilities](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/integrations-overview#integration-responsibilities)
+
+Most .NET Aspire integrations are made up of two separate libraries, each with a different responsibility. One type represents resources within the [app host](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/app-host-overview) project—known as [hosting integrations](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/integrations-overview#hosting-integrations). The other type of integration represents client libraries that connect to the resources modeled by hosting integrations, and they're known as [client integrations](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/integrations-overview#client-integrations).
+
+
 # [Internal](https://learn.microsoft.com/en-us/dotnet/aspire/app-host/configuration#internal)
 
 Internal settings are used by the app host and integrations. Internal settings aren't designed to be configured directly.
