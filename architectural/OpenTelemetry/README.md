@@ -6,3 +6,9 @@ A short explanation of what OpenTelemetry is and isn’t.
 - Not an observability backend like Jaeger, Prometheus, or other commercial vendors.
 
 <img src="./telemetry_data_flow.svg" alt="Telemetry Data Flow">
+
+
+## [OtlpExporterOptions](https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.OpenTelemetryProtocol/README.md#otlpexporteroptions)
+
+> [!NOTE]
+> When using `OtlpExportProtocol.HttpProtobuf`, the full URL MUST be provided, including the signal-specific path v1/{signal}. For example, for traces, the full URL will look like `http://your-custom-endpoint/v1/traces`.
