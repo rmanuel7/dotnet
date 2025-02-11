@@ -123,17 +123,17 @@ public static void MapHttpOtlpApi(this IEndpointRouteBuilder endpoints/*, OtlpOp
 ```
 
 
-# [OTLP/gRPC](https://github.com/open-telemetry/opentelemetry-proto/blob/main/docs/specification.md#otlpgrpc)
+## [OTLP/gRPC](https://github.com/open-telemetry/opentelemetry-proto/blob/main/docs/specification.md#otlpgrpc)
 After establishing the underlying gRPC transport, the client starts sending telemetry data using unary requests using [Export*ServiceRequest](https://github.com/open-telemetry/opentelemetry-proto) messages ([ExportLogsServiceRequest](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/collector/logs/v1/logs_service.proto) for logs, [ExportMetricsServiceRequest](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/collector/metrics/v1/metrics_service.proto) for metrics, [ExportTraceServiceRequest](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/collector/trace/v1/trace_service.proto) for traces, [ExportProfilesServiceRequest](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/collector/profiles/v1development/profiles_service.proto) for profiles).
 
 
 
-## [OTLP/gRPC Service and Protobuf Definitions](https://github.com/open-telemetry/opentelemetry-proto/blob/main/docs/specification.md#otlpgrpc-service-and-protobuf-definitions)
+### [OTLP/gRPC Service and Protobuf Definitions](https://github.com/open-telemetry/opentelemetry-proto/blob/main/docs/specification.md#otlpgrpc-service-and-protobuf-definitions)
 gRPC service definitions [are here](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/collector).
 
 Protobuf definitions for requests and responses [are here](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto).
 
 Please make sure to check the proto version and [maturity level](https://github.com/open-telemetry/opentelemetry-proto/blob/main/README.md#maturity-level). Schemas for different signals may be at different maturity level - some stable, some in beta.
 
-## [OTLP/gRPC Default Port](https://github.com/open-telemetry/opentelemetry-proto/blob/main/docs/specification.md#otlpgrpc-default-port)
+### [OTLP/gRPC Default Port](https://github.com/open-telemetry/opentelemetry-proto/blob/main/docs/specification.md#otlpgrpc-default-port)
 The default network port for OTLP/gRPC is `4317`.
