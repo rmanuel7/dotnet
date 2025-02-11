@@ -10,3 +10,114 @@ All server components MUST support the following transport compression options:
 
 - No compression, denoted by `none`.
 - Gzip compression, denoted by `gzip`.
+
+```csharp
+public class Startup
+{
+    public IConfiguration Configuration { get; }
+
+    public Startup(IConfiguration configuration)
+    {
+        Configuration = configuration;
+    }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // Add services to the container.
+        services.AddGrpc();
+
+        services.AddRazorComponents()
+            .AddInteractiveServerComponents();
+
+        // Enable the Response Compression Middleware
+        //services.AddResponseCompression(options =>
+        //{
+        //    options.EnableForHttps = true;
+        //});
+
+        services.AddTransient<OtlpLogsService>();
+        services.AddTransient<OtlpTraceService>();
+        services.AddTransient<OtlpMetricsService>();
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        // Configure the HTTP request pipeline.
+        if (!env.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
+
+        app.UseHttpsRedirection();
+
+        app.UseRouting();
+
+        app.UseAntiforgery();
+
+        // app.UseResponseCompression();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapStaticAssets();
+            endpoints.MapRazorComponents<App>()
+                .AddInteractiveServerRenderMode();
+
+            // OTLP HTTP services.
+            endpoints.MapHttpOtlpApi(/*dashboardOptions.Otlp*/);
+
+            // OTLP gRPC services.
+            endpoints.MapGrpcService<OtlpGrpcTraceService>();
+            endpoints.MapGrpcService<OtlpGrpcMetricsService>();
+            endpoints.MapGrpcService<OtlpGrpcLogsService>();
+        });
+    }
+}
+```
+
+```csharp
+public static void MapHttpOtlpApi(this IEndpointRouteBuilder endpoints/*, OtlpOptions options*/)
+{
+    //var httpEndpoint = options.GetHttpEndpointAddress();
+    //if (httpEndpoint == null)
+    //{
+    //    // Don't map OTLP HTTP route endpoints if there isn't a Kestrel endpoint to access them with.
+    //    return;
+    //}
+
+    var group = endpoints
+        .MapGroup("/v1")
+        .AddOtlpHttpMetadata();
+
+    //if (!string.IsNullOrEmpty(options.Cors.AllowedOrigins))
+    //{
+    //    group = group.RequireCors(CorsPolicyName);
+    //}
+
+    group.MapPost("logs", static (MessageBindable<ExportLogsServiceRequest> request, OtlpLogsService service) =>
+    {
+        if (request.Message == null)
+        {
+            return Results.Empty;
+        }
+        return OtlpResult.Response(service.Export(request.Message));
+    });
+    group.MapPost("traces", static (MessageBindable<ExportTraceServiceRequest> request, OtlpTraceService service) =>
+    {
+        if (request.Message == null)
+        {
+            return Results.Empty;
+        }
+        return OtlpResult.Response(service.Export(request.Message));
+    });
+    group.MapPost("metrics", (MessageBindable<ExportMetricsServiceRequest> request, OtlpMetricsService service) =>
+    {
+        if (request.Message == null)
+        {
+            return Results.Empty;
+        }
+        return OtlpResult.Response(service.Export(request.Message));
+    });
+}
+```
