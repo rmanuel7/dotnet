@@ -158,3 +158,5 @@ Telemetry data is sent via HTTP POST request. The body of the POST request is a 
 
 - The default URL path for requests that carry profiling data is `/v1development/profiles` and the request body is a Protobuf-encoded `ExportProfilesServiceRequest` message.
 
+### [OTLP/HTTP Default Port](https://github.com/open-telemetry/opentelemetry-proto/blob/main/docs/specification.md#otlphttp-default-port)
+The default network port for OTLP/HTTP is `4318`.
