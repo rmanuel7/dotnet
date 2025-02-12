@@ -48,7 +48,7 @@ The following sections explain how to configure endpoints using the:
   app.Run();
   ```
 
-> [NOTE]
+> [!NOTE]
 > Use [Configuration](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/web-host?view=aspnetcore-9.0#override-configuration) to configure Web Host.
 
 
