@@ -229,6 +229,18 @@ Telemetry limits have different scopes depending upon the telemetry type:
 ### [Connection string and endpoint references](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/app-host-overview?tabs=docker#connection-string-and-endpoint-references)
 It's common to express dependencies between project resources.
 
+```csharp
+var builder = DistributedApplication.CreateBuilder(args);
+
+var cache = builder.AddRedis("cache");
+
+var apiservice = builder.AddProject<Projects.AspireApp_ApiService>("apiservice");
+
+builder.AddProject<Projects.AspireApp_Web>("webfrontend")
+       .WithReference(cache)
+       .WithReference(apiservice);
+```
+
 | Method | Environment variable |
 | --- | --- |
 | `WithReference(cache)` | `ConnectionStrings__cache="localhost:62354"` |
