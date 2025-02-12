@@ -224,4 +224,16 @@ Telemetry limits have different scopes depending upon the telemetry type:
 | `Dashboard:TelemetryLimits:MaxSpanEventCount` | `null` | The maximum number of events on span attributes. |
 
 
+---
+
+### [Connection string and endpoint references](https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/app-host-overview?tabs=docker#connection-string-and-endpoint-references)
+It's common to express dependencies between project resources.
+
+| Method | Environment variable |
+| --- | --- |
+| `WithReference(cache)` | `ConnectionStrings__cache="localhost:62354"` |
+| `WithReference(apiservice)` | `services__apiservice__http__0="http://localhost:5455"`  <br>`services__apiservice__https__0="https://localhost:7356"` |
+
+Adding a reference to the "apiservice" project results in service discovery environment variables being added to the frontend. This is because typically, project-to-project communication occurs over HTTP/gRPC.
+
 
