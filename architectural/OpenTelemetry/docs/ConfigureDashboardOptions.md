@@ -45,6 +45,76 @@ internal readonly struct ConfigName(string configKey, string? envVarName = null)
 ```
 
 ---
+## [Dashboard configuration]
+
+The dashboard is configured when it starts up. Configuration includes frontend and OpenTelemetry Protocol (OTLP) addresses, the resource service endpoint, authentication, telemetry limits, and more.
+
+When the dashboard is launched with the .NET Aspire app host project, it's automatically configured to display the app's resources and telemetry. Configuration is provided when launching the dashboard in standalone mode.
+
+There are many ways to provide configuration:
+
+- Command line arguments.
+- Environment variables. The `:` delimiter should be replaced with double underscore (`__`) in environment variable names.
+- Optional JSON configuration file. The `DOTNET_DASHBOARD_CONFIG_FILE_PATH` setting can be used to specify a JSON configuration file.
+  
+  ```json
+    {
+      "Dashboard": {
+        "ApplicationName": "MyDashboardApp",
+        "Otlp": {
+          "AuthMode": "ApiKey",
+          "PrimaryApiKey": "your-primary-api-key",
+          "SecondaryApiKey": "your-secondary-api-key",
+          "Cors": {
+            "AllowedOrigins": ["http://localhost", "https://yourdomain.com"],
+            "AllowedHeaders": ["Content-Type", "Authorization"]
+          }
+        },
+        "Frontend": {
+          "AuthMode": "OpenIdConnect",
+          "BrowserToken": "your-browser-token",
+          "OpenIdConnect": {
+            "NameClaimType": "name",
+            "UsernameClaimType": "preferred_username",
+            "RequiredClaimType": "role",
+            "RequiredClaimValue": "admin"
+          }
+        },
+        "ResourceServiceClient": {
+          "Url": "https://resource-service.com",
+          "AuthMode": "ApiKey",
+          "ApiKey": "your-resource-service-api-key",
+          "ClientCertificate": {
+            "Source": "File",
+            "FilePath": "path/to/certificate.pfx",
+            "Password": "your-certificate-password",
+            "Subject": "your-certificate-subject",
+            "Store": "My",
+            "Location": "LocalMachine"
+          }
+        },
+        "TelemetryLimits": {
+          "MaxLogCount": 1000,
+          "MaxTraceCount": 1000,
+          "MaxMetricsCount": 1000,
+          "MaxAttributeCount": 100,
+          "MaxAttributeLength": 256,
+          "MaxSpanEventCount": 50
+        }
+      },
+      "Authentication": {
+        "Schemes": {
+          "OpenIdConnect": {
+            "Authority": "https://your-identity-provider.com",
+            "ClientId": "your-client-id",
+            "ClientSecret": "your-client-secret"
+          }
+        }
+      }
+    }
+    ```
+
+---
 
 | Option | Default value | Description |
 | --- | --- | --- |
