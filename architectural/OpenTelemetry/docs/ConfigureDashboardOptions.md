@@ -1,10 +1,21 @@
+## [OptionsBuilder API](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-9.0#optionsbuilder-api)
+<p><a href="https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.options.optionsbuilder-1" class="no-loc" data-linktype="absolute-path">OptionsBuilder&lt;TOptions&gt;</a> is used to configure <code>TOptions</code> instances. <code>OptionsBuilder</code> streamlines creating named options as it's only a single parameter to the initial <code>AddOptions&lt;TOptions&gt;(string optionsName)</code> call instead of appearing in all of the subsequent calls. Options validation and the <code>ConfigureOptions</code> overloads that accept service dependencies are only available via <code>OptionsBuilder</code>.</p>
 
+The following code:
+
+- Calls `GetSection("Dashboard")` obtiene una sección específica dentro de la configuración que tiene como clave "Dashboard".
+- Calls `AddOptions<DashboardOptions>` to get an `OptionsBuilder<TOptions>` that binds to the `DashboardOptions` class.
+- Uses `Bind(dashboardConfigSection)` to bind the `Dashboard` section settings to the `DashboardOptions` class.
+- Calls `ValidateOnStart()` to enable validation using `IValidateOptions<TOptions>` when the application starts.
+- Add an implementation of `IPostConfigureOptions<DashboardOptions>` called `PostConfigureDashboardOptions`. This allows you to modify options after they have been configured.
+- Add an implementation of `IValidateOptions<DashboardOptions>` called `ValidateDashboardOptions` to define custom validation rules.
 
 ```csharp
 var dashboardConfigSection = Configuration.GetSection("Dashboard");
 services.AddOptions<DashboardOptions>()
     .Bind(dashboardConfigSection)
     .ValidateOnStart();
+
 services.AddSingleton<IPostConfigureOptions<DashboardOptions>, PostConfigureDashboardOptions>();
 services.AddSingleton<IValidateOptions<DashboardOptions>, ValidateDashboardOptions>();
 ```
