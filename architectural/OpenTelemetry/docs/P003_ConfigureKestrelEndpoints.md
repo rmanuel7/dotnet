@@ -1,3 +1,56 @@
+# [Configure endpoints with URLs](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?view=aspnetcore-9.0#configure-endpoints-with-urls)
+The following sections explain how to configure endpoints using the:
+
+- `ASPNETCORE_URLS` environment variable.
+  
+- `--urls` command-line argument.
+
+  ```powershell
+  dotnet run --urls "http://*:8080"
+  ```
+  
+- `urls` host configuration key in `hostsettings.json`.
+
+  ```json
+  {
+      urls: "http://*:5005"
+  }
+  ```
+
+  ```csharp
+  var config = new ConfigurationBuilder()
+      .SetBasePath(Directory.GetCurrentDirectory())
+      .AddJsonFile("hostsettings.json", optional: true)
+      .AddCommandLine(args)
+      .Build();
+  ```
+  
+- [UseUrls](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.hosting.hostingabstractionswebhostbuilderextensions.useurls) extension method.
+
+  ```csharp
+  return WebHost.CreateDefaultBuilder(args)
+      .UseUrls("http://*:5000")
+      .UseConfiguration(config)
+      .Configure(app =>
+      {
+            app.Run(context => 
+                  context.Response.WriteAsync("Hello, World!"));
+      });
+  ```
+  
+- [WebApplication.Urls](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.webapplication.urls#microsoft-aspnetcore-builder-webapplication-urls) property.
+
+  ```csharp
+  var app = builder.Build();
+
+  app.Urls.Add("http://*:5003"); // 👈 Add the URL
+  
+  app.Run();
+  ```
+
+
+
+
 # [Configure endpoints in appsettings.json](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?view=aspnetcore-9.0#configure-endpoints-in-appsettingsjson)
 
 Kestrel can load endpoints from an [IConfiguration](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.configuration.iconfiguration) instance. By default, Kestrel configuration is loaded from the `Kestrel` section and endpoints are configured in `Kestrel:Endpoints`:
