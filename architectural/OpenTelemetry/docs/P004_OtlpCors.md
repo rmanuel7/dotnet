@@ -1,8 +1,6 @@
 # [Enable CORS](https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-9.0#enable-cors)
 
-There are three ways to enable CORS:
 
----
 ### In middleware using a named policy or default policy.
 
 ```csharp
