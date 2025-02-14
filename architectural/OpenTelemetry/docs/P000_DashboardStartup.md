@@ -102,3 +102,16 @@
             app.MapGrpcService<OtlpGrpcLogsService>();
         }
     ```
+
+### Step 3. Habilitar Logger debug
+
+```json
+{
+    "Logging": {
+        "LogLevel": {
+            "Default": "Information",
+            "Aspire.Dashboard": "Debug"
+        }
+    }
+}
+```
