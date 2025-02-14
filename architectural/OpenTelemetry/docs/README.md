@@ -69,9 +69,9 @@
     
     
             // OTLP services.
-            services.AddTransient<OtlpLogsService>();
-            services.AddTransient<OtlpTraceService>();
-            services.AddTransient<OtlpMetricsService>();
+            Services.AddTransient<OtlpLogsService>();
+            Services.AddTransient<OtlpTraceService>();
+            Services.AddTransient<OtlpMetricsService>();
         }
     
         public void Configure(WebApplication app, IWebHostEnvironment env)
