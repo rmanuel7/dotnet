@@ -35,10 +35,70 @@
             └── resource/
             └── trace/
     ```
+    
+  - Carga los archivos Protobuf definitions en el projecto
+    
+    ```xml
+    <ItemGroup>
+    	<!-- Build service and client types. Integration tests use the client types to call OTLP services. -->
+    	<Protobuf Include="Otlp\**\*.proto">
+    		<ProtoRoot>Otlp</ProtoRoot>
+    	</Protobuf>
+    </ItemGroup>
+    ```
 
-  - Agregar OTLP/gRPC Service
+  - Crear OTLP/gRPC Service
  
-  - Agregar OTLP/HTTP
+  - Crear OTLP/HTTP
 
     > **NOTE**
     > <br />OTLP/HTTP utiliza cargas útiles de Protobuf codificadas en formato binario o en formato JSON.
+
+  - Agregar OTLP/gRPC y OTLP/HTTP Service al injector de dependencias
+    
+    ```csharp
+        public void ConfigureServices(IServiceCollection services)
+        {
+            Services = services;
+    
+            // Add services to the container.
+            Services.AddGrpc();
+    
+            Services.AddRazorComponents()
+                .AddInteractiveServerComponents();
+    
+    
+            // OTLP services.
+            services.AddTransient<OtlpLogsService>();
+            services.AddTransient<OtlpTraceService>();
+            services.AddTransient<OtlpMetricsService>();
+        }
+    
+        public void Configure(WebApplication app, IWebHostEnvironment env)
+        {
+            // Configure the HTTP request pipeline.
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+    
+            app.UseHttpsRedirection();
+    
+            app.UseAntiforgery();
+    
+            // +
+            app.MapStaticAssets();
+            app.MapRazorComponents<App>()
+                .AddInteractiveServerRenderMode();
+    
+            // OTLP HTTP services.
+            app.MapHttpOtlpApi(/*dashboardOptions.Otlp*/);
+    
+            // OTLP gRPC services.
+            app.MapGrpcService<OtlpGrpcTraceService>();
+            app.MapGrpcService<OtlpGrpcMetricsService>();
+            app.MapGrpcService<OtlpGrpcLogsService>();
+        }
+    ```
