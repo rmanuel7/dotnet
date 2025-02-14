@@ -117,3 +117,12 @@
     }
 }
 ```
+
+---
+
+### Step 4. Agrega excepciones en .gitignore
+
+```gitignore
+!src/Aspire.Dashboard/Otlp/opentelemetry/proto/logs/
+!src/Aspire.Dashboard/Otlp/opentelemetry/proto/collector/logs/
+```
