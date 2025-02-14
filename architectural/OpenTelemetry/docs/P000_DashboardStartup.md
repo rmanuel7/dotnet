@@ -103,6 +103,8 @@
         }
     ```
 
+---
+
 ### Step 3. Habilitar Logger debug
 
 ```json
