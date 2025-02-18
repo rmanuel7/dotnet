@@ -20,7 +20,8 @@ warn: Aspire.Dashboard.Components.BrowserStorage.SessionBrowserStorage[0]
          at Microsoft.JSInterop.JSRuntime.InvokeAsync[TValue](Int64 targetInstanceId, String identifier, CancellationToken cancellationToken, Object[] args)
          at Microsoft.JSInterop.JSRuntime.InvokeAsync[TValue](Int64 targetInstanceId, String identifier, Object[] args)
          at Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorage.GetAsync[TValue](String purpose, String key)
-         at Aspire.Dashboard.Components.BrowserStorage.BrowserStorageBase.GetAsync[TValue](String key) in C:\Users\ADMIN\Documents\X-GitHub\Aspire\Aspire.Dashboard\src\Aspire.Dashboard\Components\BrowserStorage\BrowserStorageBase.cs:line 28dbug: Aspire.Dashboard.Components.LogViewer[0]
+         at Aspire.Dashboard.Components.BrowserStorage.BrowserStorageBase.GetAsync[TValue](String key) in C:\Users\ADMIN\Documents\X-GitHub\Aspire\Aspire.Dashboard\src\Aspire.Dashboard\Components\BrowserStorage\BrowserStorageBase.cs:line 28
+dbug: Aspire.Dashboard.Components.LogViewer[0]
       Log entries changed.
 info: Grpc.Net.Client.Internal.GrpcCall[3]
       Call failed with gRPC error status. Status code: 'Unavailable', Message: 'Error connecting to subchannel.'.
