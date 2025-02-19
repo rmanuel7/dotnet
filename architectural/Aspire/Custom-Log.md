@@ -45,3 +45,37 @@ info: Grpc.Net.Client.Internal.GrpcCall[3]
          at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|285_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
          at Grpc.Net.Client.Balancer.Internal.SocketConnectivitySubchannelTransport.TryConnectAsync(ConnectContext context, Int32 attempt)
 ```
+
+---
+
+### [Persist prerendered state](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/prerender?view=aspnetcore-8.0#persist-prerendered-state)
+
+El parámetro `prerender` determina si el contenido del componente se renderiza **estáticamente en el servidor** antes de establecer la conexión interactiva con el cliente.
+
+- `prerender: true` → Se genera HTML estático en el servidor antes de establecer la conexión con Blazor Server.
+- `prerender: false` → No se genera HTML en el servidor antes de que Blazor inicie la interacción.
+
+
+```razor
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
+    <link rel="stylesheet" href="@Assets["app.css"]" />
+    <link rel="stylesheet" href="@Assets["Aspire.Dashboard.styles.css"]" />
+    <ImportMap />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <HeadOutlet />
+</head>
+
+<body>
+    <Routes @rendermode="@(new InteractiveServerRenderMode(prerender: false))" />
+    <script src="_framework/blazor.web.js"></script>
+</body>
+
+</html>
+```
