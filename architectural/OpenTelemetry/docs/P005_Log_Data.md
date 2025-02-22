@@ -1,5 +1,40 @@
 ```json
 {
+    "Resource": {
+      "attributes": [
+        {
+          "key": "telemetry.sdk.name",
+          "value": { "stringValue": "opentelemetry" }
+        },
+        {
+          "key": "telemetry.sdk.language",
+          "value": { "stringValue": "dotnet" }
+        },
+        {
+          "key": "telemetry.sdk.version",
+          "value": { "stringValue": "1.11.1" }
+        },
+        {
+          "key": "service.name",
+          "value": { "stringValue": "unknown_service:Aspire.OpenTelemetryApp" }
+        }
+      ]
+    },
+    "ScopeLogs": [
+      {
+        "scope": { "name": "Microsoft.Hosting.Lifetime" },
+        "logRecords": [...]
+      }
+    ],
+    "SchemaUrl": ""
+  }
+}
+```
+
+---
+
+```json
+{
   "ResourceLogs": {
     "_unknownFields": "",
     "resource_": {
@@ -124,34 +159,6 @@
         ]
       }
     ],
-    "schemaUrl_": "",
-    "Resource": {
-      "attributes": [
-        {
-          "key": "telemetry.sdk.name",
-          "value": { "stringValue": "opentelemetry" }
-        },
-        {
-          "key": "telemetry.sdk.language",
-          "value": { "stringValue": "dotnet" }
-        },
-        {
-          "key": "telemetry.sdk.version",
-          "value": { "stringValue": "1.11.1" }
-        },
-        {
-          "key": "service.name",
-          "value": { "stringValue": "unknown_service:Aspire.OpenTelemetryApp" }
-        }
-      ]
-    },
-    "ScopeLogs": [
-      {
-        "scope": { "name": "Microsoft.Hosting.Lifetime" },
-        "logRecords": [...]
-      }
-    ],
-    "SchemaUrl": ""
-  }
+    "schemaUrl_": ""
 }
 ```
