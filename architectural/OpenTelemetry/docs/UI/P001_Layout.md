@@ -150,6 +150,22 @@ function handleResize(dotnetHelper) {
    - Se genera un nuevo `ViewportInformation` basado en `viewportSize`.  
    - Se actualiza `DimensionManager`, y se notifican los cambios a los componentes que dependen de `ViewportInformation`.
 
+> [!IMPORTANT]
+> `System.NullReferenceException`: 'Object reference not set to an instance of an object.'
+
+`Routes.razor`
+
+```razor
+
+<BrowserDimensionWatcher @bind-ViewportInformation="@_viewportInformation" />
+
+@if (_viewportInformation is null)
+{
+    // prevent render until we've determined the browser viewport so that we don't have to re-render
+    // if we guess wrong
+    return;
+}
+```
 ---
 
 ### **Resumen**
