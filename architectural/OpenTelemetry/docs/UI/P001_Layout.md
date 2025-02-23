@@ -234,6 +234,8 @@
 
 ---
 
+`MainLayout.razor`
+
 ```razor
 @inherits LayoutComponentBase
 @using Aspire.Dashboard.Components.ResourceIcons
