@@ -1,6 +1,9 @@
 # BrowserTimeZone
 
-Para hacer que la zona horaria esté disponible en toda la aplicación, creamos un servicio singleton y lo inyectamos en el contenedor de dependencias. 
+Para hacer que la zona horaria esté disponible en toda la aplicación, creamos un servicio **Scoped** y lo inyectamos en el contenedor de dependencias. 
+
+> [!IMPORTANT]
+> Esto es diferente de `ViewportInformation`, que es un componente usado para manejar información del viewport y generalmente solo es útil en los componentes de UI.
 
 ---
 
