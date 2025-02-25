@@ -11,6 +11,7 @@
 │       │  │             main            │  │
 │       │  ├─────────────────────────────┤  │
 │       │  │             footer          │  │
+│       │  └─────────────────────────────┘  │
 └───────┴───────────────────────────────────┘
 */
 
@@ -25,28 +26,6 @@
     grid-template-rows: auto 1fr auto;
 }
 
-::deep.content-header {
-    grid-area: page-header;
-    word-break: break-all;
-}
-
-::deep .title-toolbar-inline {
-    padding-left: 0px;
-    padding-top: 0px;
-}
-
-    ::deep .title-toolbar-inline > h1 {
-        margin-left: 0;
-    }
-
-/**
- * Inner Style:
- *   grid-area: main;
- */
-
-/**
- * Inner Style:
- *   grid-area: footer;
- */
 ```
 
+![Aspire Page Content Layout](../../Aspire.Dashboard/img/Aspire-UI-PageContentLayout.png)
