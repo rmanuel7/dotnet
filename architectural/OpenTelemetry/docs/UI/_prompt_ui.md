@@ -7,22 +7,69 @@ Para pedirme una estructura clara y precisa, puedes describirla de la siguiente 
 >   - `grid-template-areas`:  
 >     ```
 >     "icon head"  
+>     "nav main"
 >     "nav main"  
 >     ```
-> - **Dentro de `main`** (subgrid):  
+> - **Dentro de `main`** (div):
+>   - `page-content-container`:
+>     ```
+>     height: 100%;
+>     ```
+> - **Dentro de `div`** (grid):  
 >   - `grid-template-areas`:  
 >     ```
 >     "page-header"  
->     "second-main"  
+>     "main"  
 >     "footer"
 >     ```
-> - **Dentro de `second-main`** (otro subgrid):  
+> - **Dentro de `main`** (div):
+>   - `summary-details-container`:
+>     ```
+>     height: 100%;
+>     ```
+> - **Dentro de `div`** (grid):  
 >   - `grid-template-areas`:  
 >     ```
->     "main"  
->     "foot"
+>     "panel1 panel2"  
+>     "panel1 panel2"
 >     ```
-> - Quiero que `main` sea más ancho que `nav` y que la jerarquía se vea clara.  
+> - **Dentro de `panel1`** (div):  
+>   - `summary-container`:  
+>     ```
+>     height: 100%;
+>     min-width: 100%;
+>     ```
+> - **Dentro de `panel2`** (grid):  
+>   - `grid-template-areas`:  
+>     ```
+>     "head"  
+>     "main"  
+>     ```
+> - Quiero que `main` sea más ancho que `nav` y que la jerarquía se vea clara.
+
+```
+┌───────────┐───────────────────────────────────────────┐
+│ ICON      │                  HEADER                   │
+├───────────┼───────────────────────────────────────────┤
+│ NAV       │                   MAIN                    │
+│           │ ┌───────────────────────────────────────┐ │
+│           │ │              PAGE HEADER              │ │
+│           │ ├───────────────────────────────────────┤ │
+│           │ │      SUMMARY-DETAILS CONTAINER        │ │
+│           │ │ ┌──────────────────────┬──────────────┐ │
+│           │ │ │        PANEL 1       │    PANEL 2   │ │
+│           │ │ │ ┌──────────────────┐ │ ┌──────────┐ │ │
+│           │ │ │ │     SUMMARY      │ │ │   HEAD   │ │ │
+│           │ │ │ └──────────────────┘ │ ├──────────┤ │ │
+│           │ │ │                      │ │   MAIN   │ │ │
+│           │ │ │                      │ └──────────┘ │ │
+│           │ │ └──────────────────────┴──────────────┘ │
+│           │ └───────────────────────────────────────┘ │
+│           │ ┌───────────────────────────────────────┐ │
+│           │ │                 FOOTER                │ │
+│           │ └───────────────────────────────────────┘ │
+└───────────┴───────────────────────────────────────────┘
+```
 
 ### **Explicación de por qué esta estructura es clara:**  
 - Especifica los **diferentes niveles de anidación**.  
