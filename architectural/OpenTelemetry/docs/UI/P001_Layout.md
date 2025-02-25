@@ -27,6 +27,8 @@
 └───────┴───────────────────────────────┘
 ```
 
+![Aspire Dashboard LayoutMain](../../Aspire.Dashboard/img/Aspire-UI-MainLayout.png)
+
 <table>
     <thead>
         <tr>
@@ -236,18 +238,29 @@
 
 `MainLayout.razor`
 
+```
+┌───────┬───────────────────────────────┐
+│ icon  │             head              │
+├───────┼───────────────────────────────┤
+│ nav   │             main              │
+│       │                               │
+│       │                               │
+│       │                               │
+└───────┴───────────────────────────────┘
+```
+
 ```razor
 @inherits LayoutComponentBase
 @using Aspire.Dashboard.Components.ResourceIcons
 
 <div class="layout">
-
+        @* grid-area: icon; *@
 	<div class="brand-icon">
 		<FluentAnchor Href="/"
-					  Class="logo"
-					  Appearance="Appearance.Stealth"
-					  title="@Loc[nameof(Resources.Layout.MainLayoutAspire)]"
-					  aria-label="@Loc[nameof(Resources.Layout.MainLayoutAspire)]">
+                              Class="logo"
+                              Appearance="Appearance.Stealth"
+                              title="@Loc[nameof(Resources.Layout.MainLayoutAspire)]"
+                              aria-label="@Loc[nameof(Resources.Layout.MainLayoutAspire)]">
 
 			<FluentIcon Value="@(new AspireIcons.Size24.Logo())" />
 
@@ -256,6 +269,7 @@
 
 	@if (ViewportInformation.IsDesktop)
 	{
+              @* grid-area: head; *@
 		<FluentHeader>
 
 			<FluentAnchor Href="/" Class="logo" Appearance="Appearance.Stealth">
@@ -265,15 +279,15 @@
 			<div style="flex-grow: 1"></div>
 
 			<FluentAnchor Href="https://aka.ms/dotnet/aspire/repo"
-						  Target="_blank"
-						  Rel="noreferrer noopener"
-						  Appearance="Appearance.Stealth">
+                                      Target="_blank"
+                                      Rel="noreferrer noopener"
+                                      Appearance="Appearance.Stealth">
 				<FluentIcon Value="@(new AspireIcons.Size24.GitHub())" />
 			</FluentAnchor>
 
 		</FluentHeader>
 
-
+                @* grid-area: nav; *@
 		<DesktopNavMenu />
 	}
 	else
@@ -282,5 +296,16 @@
 			ViewportInformation.IsDesktop: False
 		</FluentMessageBar>
 	}
+
+	@* grid-area: messagebar; *@
+	<div class="messagebar-container">
+		<FluentMessageBarProvider Section="@MessageBarSection" Class="top-messagebar" />
+	</div>
+
+	@* grid-area: main; *@
+	<FluentBodyContent Class="custom-body-content body-content">
+		<FluentToastProvider MaxToastCount="3" Timeout="5000" />
+		@Body
+	</FluentBodyContent>
 </div>
 ```
