@@ -41,17 +41,18 @@
             <td>
                 <pre>
                     <code class="language-css">
-@media (max-width: 768px) {
+@media (min-width: 768px) {
     ::deep.layout {
         height: 100vh;
         width: 100vw;
         display: grid;
         grid-template-columns: auto 1fr;
-        grid-template-rows: auto auto 1fr;
+        grid-template-rows: auto auto auto 1fr;
         grid-template-areas:
             "icon head"
-            "nav messagebar"
-            "nav main";
+            "nav-menu nav-menu"
+            "messagebar messagebar"
+            "main main";
         background-color: var(--fill-color);
         color: var(--neutral-foreground-rest);
     }
@@ -122,18 +123,17 @@
             <td>
                 <pre>
                     <code class="language-css">
-@media (min-width: 768px) {
+@media (max-width: 768px) {
     ::deep.layout {
         height: 100vh;
         width: 100vw;
         display: grid;
         grid-template-columns: auto 1fr;
-        grid-template-rows: auto auto auto 1fr;
+        grid-template-rows: auto auto 1fr;
         grid-template-areas:
             "icon head"
-            "nav-menu nav-menu"
-            "messagebar messagebar"
-            "main main";
+            "nav messagebar"
+            "nav main";
         background-color: var(--fill-color);
         color: var(--neutral-foreground-rest);
     }
