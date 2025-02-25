@@ -52,7 +52,7 @@ Para pedirme una estructura clara y precisa, puedes describirla de la siguiente 
 > - Quiero que `main` sea más ancho que `nav` y que la jerarquía se vea clara.
 
 ```
-┌───────────────────────────────────────────────────────────────┐
+┌───────────┐───────────────────────────────────────────────────┐
 │ ICON      │                      HEADER                       │
 ├───────────┼───────────────────────────────────────────────────┤
 │ NAV       │                   PAGE CONTENT                    │
