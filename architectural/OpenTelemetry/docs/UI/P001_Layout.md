@@ -229,13 +229,6 @@
         margin-left: auto;
     }
 
-    ::deep.layout > header > .header-gutters > fluent-button[appearance=stealth]:not(:hover)::part(control),
-    ::deep.layout > header > .header-gutters > fluent-anchor[appearance=stealth]:not(:hover)::part(control),
-    ::deep.layout > header > .header-gutters > fluent-anchor[appearance=stealth].logo::part(control),
-    ::deep.layout > .aspire-icon fluent-anchor[appearance=stealth].logo::part(control) {
-        background-color: var(--neutral-layer-4);
-    }
-
     ::deep.layout > header {
         background-color: var(--neutral-layer-4);
         margin-bottom: 0;
