@@ -67,7 +67,10 @@
 await HttpContext.SignInAsync(
             CookieAuthenticationDefaults.AuthenticationScheme, 
             new ClaimsPrincipal(claimsIdentity), 
-            authProperties);
+            new AuthenticationProperties
+            {
+                IsPersistent = true
+            });
 ```
 
 > [!TIP]
