@@ -32,8 +32,11 @@
 > [!IMPORTANT]
 > Authentication is responsible for providing the `ClaimsPrincipal` for **authorization** to make permission decisions against.
 
+> [!NOTE]
+> The registered **authentication handlers** and their configuration options are called **schemes**.
 
-
+> [!NOTE]
+> The **authentication scheme** can **select** which authentication handler is **responsible** for generating the correct set of claims.
 
 
 
