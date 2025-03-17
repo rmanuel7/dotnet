@@ -73,16 +73,6 @@ Aquí te presento una versión corregida y explicada de tu `AuthenticationHandle
 **1. Corrección del `PasswordFlowAuthenticationHandler`**
 
 ```csharp
-using System;
-using System.Security.Claims;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Http; // Para HttpContext
-
 public class PasswordFlowAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     private readonly IRopcService _ropcService;
@@ -101,38 +91,20 @@ public class PasswordFlowAuthenticationHandler : AuthenticationHandler<Authentic
             return AuthenticateResult.Success(new AuthenticationTicket(Context.User, Scheme.Name));
         }
 
-        // Verifica si la solicitud tiene un token de acceso en el encabezado de autorización.
-        if (!Request.Headers.ContainsKey("Authorization"))
+        // Obtener el access_token del ClaimsPrincipal.
+        var accessTokenClaim = Context.User.FindFirst("access_token");
+
+        if (accessTokenClaim == null || string.IsNullOrEmpty(accessTokenClaim.Value))
         {
-            return AuthenticateResult.NoResult(); // No se requiere autenticación, o no hay token.
+            return AuthenticateResult.NoResult(); // No hay access_token en las claims.
         }
 
-        var authorizationHeader = Request.Headers["Authorization"].ToString();
-        if (!authorizationHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-        {
-            return AuthenticateResult.NoResult(); // No es un token Bearer.
-        }
+        var accessToken = accessTokenClaim.Value;
 
-        var accessToken = authorizationHeader.Substring("Bearer ".Length).Trim();
-
-        try
-        {
-            // Validar el token de acceso (aquí puedes usar tu lógica de validación).
-            var handler = new JwtSecurityTokenHandler();
-            var jwtSecurityToken = handler.ReadJwtToken(accessToken);
-
-            // Crear principal autenticado.
-            var identity = new ClaimsIdentity(jwtSecurityToken.Claims, Scheme.Name);
-            var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, Scheme.Name);
-
-            return AuthenticateResult.Success(ticket);
-        }
-        catch (Exception ex)
-        {
-            return AuthenticateResult.Fail($"Token de acceso inválido: {ex.Message}");
-        }
+        return await ValidateAccessToken(accessToken);
     }
+
+
 
     public async Task<AuthenticateResult> AuthenticateUser(string username, string password)
     {
@@ -147,6 +119,53 @@ public class PasswordFlowAuthenticationHandler : AuthenticationHandler<Authentic
             {
                 return Task.FromResult(result: AuthenticateResult.Fail(error.Message));
             });
+    }
+
+    private async Task<AuthenticateResult> ValidateAccessToken(string accessToken)
+    {
+        try
+        {
+            // 1. Validar y decodificar el access_token.
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(accessToken);
+
+            // 2. Verificar la expiración del token.
+            var expirationTime = jwtSecurityToken.ValidTo;
+            if (expirationTime < DateTime.UtcNow.AddMinutes(5)) // Token expira en menos de 5 minutos.
+            {
+                // 3. Realizar el refresh token.
+                var refreshTokenClaim = Context.User.FindFirst("refresh_token");
+                if (refreshTokenClaim == null || string.IsNullOrEmpty(refreshTokenClaim.Value))
+                {
+                    return AuthenticateResult.Fail("Refresh token no encontrado en las claims.");
+                }
+
+                var refreshToken = refreshTokenClaim.Value;
+
+                var refreshResult = await _ropcService.RefreshTokenAsync(refreshToken);
+                return await refreshResult.Switch(
+                    onSuccess: tokenResponse =>
+                    {
+                        // Actualizar ClaimsPrincipal con nuevos tokens.
+                        return Success(tokenResponse);
+                    },
+                    onFailure: error =>
+                    {
+                        return Task.FromResult(AuthenticateResult.Fail(error.Message));
+                    });
+            }
+
+            // 4. Crear ClaimsPrincipal si el token es válido.
+            var identity = new ClaimsIdentity(jwtSecurityToken.Claims, Scheme.Name);
+            var principal = new ClaimsPrincipal(identity);
+            var ticket = new AuthenticationTicket(principal, Scheme.Name);
+
+            return AuthenticateResult.Success(ticket);
+        }
+        catch (Exception ex)
+        {
+            return AuthenticateResult.Fail($"Token de acceso inválido: {ex.Message}");
+        }
     }
 
     private async Task<AuthenticateResult> Success(TokenResponse token)
