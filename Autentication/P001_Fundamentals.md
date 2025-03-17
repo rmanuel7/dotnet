@@ -69,7 +69,8 @@ await HttpContext.SignInAsync(
             new ClaimsPrincipal(claimsIdentity), 
             new AuthenticationProperties
             {
-                IsPersistent = true
+                IsPersistent = true,
+                ExpiresUtc = DateTime.UtcNow.AddMinutes(20)
             });
 ```
 
