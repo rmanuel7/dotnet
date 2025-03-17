@@ -39,5 +39,27 @@
 > The **authentication scheme** can **select** which authentication handler is **responsible** for generating the correct set of claims.
 
 
+## [Authentication handler](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-9.0#authentication-handler)
+> [!NOTE]
+> Has the primary responsibility to authenticate users.
+
+> [!NOTE]
+> Is derived from `IAuthenticationHandler` or `AuthenticationHandler<TOptions>`.
+
+> [!NOTE]
+> Is a type that implements the **behavior of a scheme**.
+> - Construct `AuthenticationTicket` objects representing the user's identity if authentication **is successful**.
+> - Return 'no result' or 'failure' if authentication **is unsuccessful**.
+> - Have methods for challenge and forbid actions for when users attempt to access resources:
+>   - They're unauthorized to access (forbid).
+>   - When they're unauthenticated (challenge).
+
+
+
+
+
+
+
+
 
 
