@@ -64,6 +64,54 @@
 <br />
 <br />
 
+Claro, vamos a desglosar qué significa `Context.SignInAsync(Scheme.Name, principal)` y sus implicaciones con las cookies y el almacenamiento de información de inicio de sesión.
+
+**¿Qué significa `Context.SignInAsync(Scheme.Name, principal)`?**
+
+Este método, `SignInAsync`, es parte del sistema de autenticación de ASP.NET Core. Su función principal es establecer el principal de identidad del usuario (el `ClaimsPrincipal`) en el contexto de la solicitud actual. En términos más sencillos, le dice a la aplicación que el usuario ha sido autenticado y quién es ese usuario.
+
+* **`Context`**: Representa el contexto HTTP actual, que incluye información sobre la solicitud y la respuesta.
+* **`Scheme.Name`**: Es el nombre del esquema de autenticación que estás utilizando (en tu caso, "PasswordFlow").
+* **`principal`**: Es el objeto `ClaimsPrincipal` que contiene la identidad del usuario, incluyendo sus reclamaciones (claims) y roles.
+
+**Implicaciones con las cookies**
+
+Por defecto, ASP.NET Core utiliza cookies para almacenar la información de autenticación cuando llamas a `SignInAsync`. Esto significa que, después de que el usuario se autentica, se crea una cookie que contiene una representación cifrada del `ClaimsPrincipal`. En solicitudes subsiguientes, ASP.NET Core lee esta cookie y restaura el `ClaimsPrincipal` en el contexto, permitiendo que la aplicación sepa que el usuario está autenticado.
+
+**Almacenamiento de la información de inicio de sesión sin Bearer**
+
+Dado que no estás utilizando tokens Bearer, las cookies son la opción más común y recomendada para mantener la sesión del usuario. Aquí tienes algunas consideraciones:
+
+* **Cookies**:
+    * **Ventajas**: Son la forma estándar de manejar la autenticación basada en sesiones en aplicaciones web. ASP.NET Core proporciona una excelente integración con cookies de autenticación.
+    * **Desventajas**: Debes tener cuidado con la seguridad de las cookies (por ejemplo, configurarlas como `HttpOnly` y `Secure`).
+* **Base de datos**:
+    * **Ventajas**: Puedes almacenar información de sesión más compleja en una base de datos.
+    * **Desventajas**: Requiere una infraestructura adicional y puede ser más lento que usar cookies. También debes implementar tu propia lógica para limpiar sesiones antiguas.
+
+**¿Deberías crear una cookie o guardarla en una base de datos?**
+
+* En la mayoría de los casos, usar cookies es la mejor opción. ASP.NET Core está diseñado para funcionar bien con cookies de autenticación.
+* Solo deberías considerar una base de datos si tienes requisitos muy específicos, como almacenar grandes cantidades de datos de sesión o si necesitas un control muy granular sobre las sesiones de usuario.
+
+**Recomendaciones adicionales**
+
+* Asegúrate de configurar correctamente la seguridad de las cookies en tu aplicación.
+* Considera utilizar la protección de datos de ASP.NET Core para cifrar y proteger tus cookies.
+* Recuerda que si no utilizas el sistema de cookies de ASP.NET Core, deberás de crear tu propio sistema de administración de cookies.
+
+Espero que esta explicación te ayude a comprender mejor cómo funciona `SignInAsync` y cómo puedes manejar la autenticación en tu aplicación.
+
+<br />
+<br />
+<br />
+
+---
+
+<br />
+<br />
+<br />
+
 ¡Claro! Entiendo que estás construyendo un `AuthenticationHandler` personalizado para el flujo de concesión de contraseña (Resource Owner Password Credentials - ROPC) en ASP.NET Core, y te preocupa que se esté intentando autenticar en cada solicitud. Tienes razón en que la autenticación solo debe ocurrir cuando el usuario inicia sesión, no en cada solicitud subsiguiente.
 
 El problema principal en tu código es que estás realizando la autenticación (llamando a `_ropcService.SignInIdp`) dentro del método `HandleAuthenticateAsync`. Este método se llama en cada solicitud que requiere autenticación, lo que explica por qué se intenta iniciar sesión en cada llamada.
@@ -73,16 +121,30 @@ Aquí te presento una versión corregida y explicada de tu `AuthenticationHandle
 **1. Corrección del `PasswordFlowAuthenticationHandler`**
 
 ```csharp
+/// <summary>
+/// Authentication handler para el flujo de concesión de contraseña (Resource Owner Password Credentials).
+/// </summary>
 public class PasswordFlowAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     private readonly IRopcService _ropcService;
 
+    /// <summary>
+    /// Constructor del PasswordFlowAuthenticationHandler.
+    /// </summary>
+    /// <param name="options">Opciones de autenticación.</param>
+    /// <param name="logger">Logger para registrar eventos.</param>
+    /// <param name="encoder">Encoder de URL.</param>
+    /// <param name="ropcService">Servicio para interactuar con el Identity Provider.</param>
     public PasswordFlowAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, IRopcService ropcService)
         : base(options, logger, encoder)
     {
         _ropcService = ropcService;
     }
 
+    /// <summary>
+    /// Maneja la autenticación de la solicitud actual.
+    /// </summary>
+    /// <returns>Resultado de la autenticación.</returns>
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         // Verifica si ya hay un principal autenticado en el contexto.
@@ -101,11 +163,16 @@ public class PasswordFlowAuthenticationHandler : AuthenticationHandler<Authentic
 
         var accessToken = accessTokenClaim.Value;
 
+        // Validar el token de acceso.
         return await ValidateAccessToken(accessToken);
     }
 
-
-
+    /// <summary>
+    /// Autentica a un usuario utilizando las credenciales proporcionadas.
+    /// </summary>
+    /// <param name="username">Nombre de usuario.</param>
+    /// <param name="password">Contraseña.</param>
+    /// <returns>Resultado de la autenticación.</returns>
     public async Task<AuthenticateResult> AuthenticateUser(string username, string password)
     {
         var result = await _ropcService.SignInIdp(username, password);
@@ -121,6 +188,11 @@ public class PasswordFlowAuthenticationHandler : AuthenticationHandler<Authentic
             });
     }
 
+    /// <summary>
+    /// Valida el token de acceso y realiza el refresh si es necesario.
+    /// </summary>
+    /// <param name="accessToken">Token de acceso a validar.</param>
+    /// <returns>Resultado de la autenticación.</returns>
     private async Task<AuthenticateResult> ValidateAccessToken(string accessToken)
     {
         try
@@ -168,6 +240,11 @@ public class PasswordFlowAuthenticationHandler : AuthenticationHandler<Authentic
         }
     }
 
+    /// <summary>
+    /// Crea y guarda el principal autenticado en el contexto.
+    /// </summary>
+    /// <param name="token">Respuesta del token.</param>
+    /// <returns>Resultado de la autenticación.</returns>
     private async Task<AuthenticateResult> Success(TokenResponse token)
     {
         if (token == null)
