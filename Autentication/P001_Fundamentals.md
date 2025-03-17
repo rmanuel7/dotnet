@@ -93,6 +93,12 @@ await HttpContext.SignInAsync(
         CookieAuthenticationDefaults.AuthenticationScheme);
 ```
 
+
+> [!CAUTION]
+> System.InvalidOperationException:
+> - The authentication handler registered for scheme 'PasswordScheme' is 'PasswordFlowAuthenticationHandler' which cannot be used for SignInAsync.
+> - Did you forget to call AddAuthentication().AddCookie("Cookies") and SignInAsync("Cookies",...)?
+
 <br />
 <br />
 <br />
