@@ -54,6 +54,31 @@
 >   - They're unauthorized to access (forbid).
 >   - When they're unauthenticated (challenge).
 
+## [Create an authentication cookie](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-9.0#create-an-authentication-cookie)
+> [!IMPORTANT]
+> To create a cookie holding user information, construct a `ClaimsPrincipal`.
+> -  The user information is serialized and stored in the cookie.
+
+> [!TIP]
+> Create a `ClaimsIdentity` with any required `Claims` and call `SignInAsync` to sign in the user.
+> - `SignInAsync` creates an encrypted cookie and **adds it to the current response**. If AuthenticationScheme isn't specified, the default scheme is used.
+
+```csharp
+await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme, 
+            new ClaimsPrincipal(claimsIdentity), 
+            authProperties);
+```
+
+> [!TIP]
+> To sign out the current user and delete their cookie, call `SignOutAsync`:
+
+```csharp
+// Clear the existing external cookie
+    await HttpContext.SignOutAsync(
+        CookieAuthenticationDefaults.AuthenticationScheme);
+```
+
 <br />
 <br />
 <br />
