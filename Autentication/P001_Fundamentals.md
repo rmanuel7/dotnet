@@ -54,6 +54,16 @@
 >   - They're unauthorized to access (forbid).
 >   - When they're unauthenticated (challenge).
 
+
+## Authentication service
+> [!NOTE]
+> In ASP.NET Core, authentication is handled by the authentication service, `IAuthenticationService`, which is used by authentication middleware.
+
+> [!IMPORTANT]
+>  The authentication service uses registered authentication handlers **to complete authentication-related actions**.
+
+
+
 ## [Create an authentication cookie](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-9.0#create-an-authentication-cookie)
 > [!IMPORTANT]
 > To create a cookie holding user information, construct a `ClaimsPrincipal`.
