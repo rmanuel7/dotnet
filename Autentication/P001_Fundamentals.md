@@ -28,7 +28,9 @@
 > **On subsequent requests**, the middleware validates the cookie, **recreates the principal**, and assigns the principal to the `HttpContext.User` property.
 
 
-
+## [Authentication concepts](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-9.0#authentication-concepts)
+> [!IMPORTANT]
+> Authentication is responsible for providing the `ClaimsPrincipal` for **authorization** to make permission decisions against.
 
 
 
