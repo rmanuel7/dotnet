@@ -221,12 +221,21 @@ Aquí te presento una versión corregida y explicada de tu `AuthenticationHandle
 **1. Corrección del `PasswordFlowAuthenticationHandler`**
 
 ```csharp
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Options;
+
+namespace Reincar.Busquedas.WebReact.Services;
+
 /// <summary>
 /// Authentication handler para el flujo de concesión de contraseña (Resource Owner Password Credentials).
 /// </summary>
 public class PasswordFlowAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    private readonly IRopcService _ropcService;
+    private readonly IPasswordFlowService _ropcService;
 
     /// <summary>
     /// Constructor del PasswordFlowAuthenticationHandler.
@@ -235,7 +244,7 @@ public class PasswordFlowAuthenticationHandler : AuthenticationHandler<Authentic
     /// <param name="logger">Logger para registrar eventos.</param>
     /// <param name="encoder">Encoder de URL.</param>
     /// <param name="ropcService">Servicio para interactuar con el Identity Provider.</param>
-    public PasswordFlowAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, IRopcService ropcService)
+    public PasswordFlowAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, IPasswordFlowService ropcService)
         : base(options, logger, encoder)
     {
         _ropcService = ropcService;
@@ -248,13 +257,19 @@ public class PasswordFlowAuthenticationHandler : AuthenticationHandler<Authentic
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         // Verifica si ya hay un principal autenticado en el contexto.
-        if (Context.User.Identity?.IsAuthenticated == true)
+        var result = await Context.AuthenticateAsync(scheme: CookieAuthenticationDefaults.AuthenticationScheme);
+
+        if (!result.Succeeded)
         {
-            return AuthenticateResult.Success(new AuthenticationTicket(Context.User, Scheme.Name));
+            return result;
         }
+        // Hay que asignar el principal que retorna la cookie a nuestro contexto de validación.
+        // Al parecer las trata como dos instacias diferentes, que en efecto lo son.
+        // pero el Scoped debería ser el mismo. ????
+        Context.User = result.Principal;
 
         // Obtener el access_token del ClaimsPrincipal.
-        var accessTokenClaim = Context.User.FindFirst("access_token");
+        var accessTokenClaim = result.Principal.FindFirst("access_token");
 
         if (accessTokenClaim == null || string.IsNullOrEmpty(accessTokenClaim.Value))
         {
@@ -265,27 +280,6 @@ public class PasswordFlowAuthenticationHandler : AuthenticationHandler<Authentic
 
         // Validar el token de acceso.
         return await ValidateAccessToken(accessToken);
-    }
-
-    /// <summary>
-    /// Autentica a un usuario utilizando las credenciales proporcionadas.
-    /// </summary>
-    /// <param name="username">Nombre de usuario.</param>
-    /// <param name="password">Contraseña.</param>
-    /// <returns>Resultado de la autenticación.</returns>
-    public async Task<AuthenticateResult> AuthenticateUser(string username, string password)
-    {
-        var result = await _ropcService.SignInIdp(username, password);
-
-        return await result.Switch(
-            onSuccess: async tokenResponse =>
-            {
-                return await Success(token: tokenResponse);
-            },
-            onFailure: error =>
-            {
-                return Task.FromResult(result: AuthenticateResult.Fail(error.Message));
-            });
     }
 
     /// <summary>
@@ -327,12 +321,8 @@ public class PasswordFlowAuthenticationHandler : AuthenticationHandler<Authentic
                     });
             }
 
-            // 4. Crear ClaimsPrincipal si el token es válido.
-            var identity = new ClaimsIdentity(jwtSecurityToken.Claims, Scheme.Name);
-            var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, Scheme.Name);
-
-            return AuthenticateResult.Success(ticket);
+            // 4. Si el token es válido, Context.User ya debería contener las claims del token validado.
+            return AuthenticateResult.Success(new AuthenticationTicket(Context.User, Scheme.Name));
         }
         catch (Exception ex)
         {
