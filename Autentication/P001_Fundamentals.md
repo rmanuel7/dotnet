@@ -419,8 +419,19 @@ public class AuthController : ControllerBase
 
 ```csharp
 // Program.cs
-builder.Services.AddAuthentication("PasswordFlow")
-    .AddScheme<AuthenticationSchemeOptions, PasswordFlowAuthenticationHandler>("PasswordFlow", null);
+Services.AddAuthentication(configureOptions: action =>
+{
+    action.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    action.DefaultAuthenticateScheme = PasswordFlowAuthenticationDefaults.AuthenticationScheme;
+})
+    .AddCookie(authenticationScheme: CookieAuthenticationDefaults.AuthenticationScheme, configureOptions: action =>
+    {
+        action.Cookie.Name = ".Reincar.Web.Busquedas";
+        action.LoginPath = "/#/Account/Login";
+    })
+    .AddScheme<AuthenticationSchemeOptions, PasswordFlowAuthenticationHandler>(
+        authenticationScheme: PasswordFlowAuthenticationDefaults.AuthenticationScheme,
+        configureOptions: action => { });
 
 builder.Services.AddAuthorization();
 ```
