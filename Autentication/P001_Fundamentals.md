@@ -384,26 +384,73 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController : ControllerBase
+public class AccountController : ControllerBase
 {
-    private readonly PasswordFlowAuthenticationHandler _authenticationHandler;
+    private readonly IPasswordFlowService _ropcService;
+    private readonly IApplicationUserService _userService;
+    private readonly IAntiforgery _forgeryService;
+    private readonly IAuthenticationService _authenticationService;
 
-    public AuthController(PasswordFlowAuthenticationHandler authenticationHandler)
+    public AccountController(IApplicationUserService userService, IAntiforgery forgeryService, IPasswordFlowService ropcService, IAuthenticationService authenticationService)
     {
-        _authenticationHandler = authenticationHandler;
+        _userService = userService;
+        _forgeryService = forgeryService;
+        _ropcService = ropcService;
+        _authenticationService = authenticationService;
     }
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login(string username, string password)
-    {
-        var result = await _authenticationHandler.AuthenticateUser(username, password);
 
-        if (result.Succeeded)
+    [HttpPost(template: "[action]")]
+    [ValidateAntiForgeryToken]
+    [AllowAnonymous]
+    public async Task<IActionResult> Login(AccountLoginViewModel InputModel)
+    {
+        UpdateAntiforgery();
+
+        if (ModelState.IsValid)
         {
-            return Ok("Inicio de sesión exitoso.");
+            var result = await _ropcService.SignInIdp(InputModel.Username, InputModel.Password);
+
+            return await result.Switch(
+                onSuccess: async tokenResponse =>
+                {
+                    // Crear ClaimsPrincipal.
+                    var handler = new JwtSecurityTokenHandler();
+                    var jwtSecurityToken = handler.ReadJwtToken(tokenResponse.IdToken);
+                    var identity = new ClaimsIdentity(jwtSecurityToken.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    identity.AddClaim(new Claim("access_token", tokenResponse.AccessToken));
+                    identity.AddClaim(new Claim("refresh_token", tokenResponse.RefreshToken));
+                    var principal = new ClaimsPrincipal(identity);
+
+                    // Autenticar al usuario utilizando IAuthenticationService.
+                    await _authenticationService.SignInAsync(
+                        context: HttpContext,
+                        scheme: CookieAuthenticationDefaults.AuthenticationScheme,
+                        principal: principal,
+                        properties: new AuthenticationProperties
+                        {
+                            IsPersistent = InputModel.RememberMe,
+                            ExpiresUtc = DateTime.UtcNow.AddMinutes(59)
+                        });
+
+                    return (IActionResult)Ok(new
+                    {
+                        Success = true,
+                        Message = "Inicio de sesión exitoso.",
+                        Data = _userService.MapFromPrincipal(principal)
+                    });
+                },
+                onFailure: error =>
+                {
+                    return Task.FromResult((IActionResult)BadRequest(new
+                    {
+                        Success = false,
+                        Message = error.Message
+                    }));
+                });
         }
 
-        return BadRequest(result.Failure.Message);
+        return BadRequest(ModelState);
     }
 
     [HttpGet("protected")]
