@@ -40,4 +40,30 @@ public class ValidatableMovie : IValidatableObject
 }
 ```
 
+```C#
+// dataannotations validation c#
+// https://www.c-sharpcorner.com/article/validations-forms-in-dataannotations/
+// https://weblogs.asp.net/ricardoperes/net-8-data-annotations-validation
 
+public static void TryValidateObjectExample1()  
+{  
+    /// 1.- Create a customer  
+    var customer = new Customer  
+    {  
+        Name                 = string.Empty,  
+        EntryDate            = DateTime.Today,  
+        Password             = "AAAA",  
+        PasswordConfirmation = "BBBB",  
+        Age                  = -1  
+    };  
+    /// 2.- Create a context of validation  
+    ValidationContext valContext = new ValidationContext(customer, null, null);  
+    /// 3.- Create a container of results  
+    var validationsResults = new List<ValidationResult>();  
+    /// 4.- Validate customer  
+    bool correct = Validator.TryValidateObject(customer, valContext, validationsResults, true);  
+   
+    Console.WriteLine(validationsResults.ToDescErrorsString("Without Errors !!!!"));  
+    Console.Read();  
+} 
+```
